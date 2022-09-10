@@ -1,0 +1,162 @@
+export type AsyncMapLike<T, U> = {
+  get: (key: T) => U | Promise<U> | undefined;
+  set: (key: T, value: U) => unknown | Promise<unknown>;
+};
+
+export type RememberPromiseOptions<
+  T extends (...args: any[]) => Promise<any> = (...args: any[]) => Promise<any>,
+  U extends Awaited<ReturnType<T>> = Awaited<ReturnType<T>>
+> = {
+  /**
+   * This enables stale-while-revalidate behavior where an expired result can still
+   * be used while waiting for it to be updated in the background asynchronously.
+   *
+   * By default, this behavior is enabled.
+   *
+   * @default true
+   */
+  allowStale?: boolean;
+  /**
+   * Configures how long in milliseconds the cached result should be used before needing to be revalidated.
+   *
+   * **NOTE: the actual revalidation of the cached result is done slightly before expiry by
+   * default. This can be adjusted using the {@link xfetchBeta} option.**
+   *
+   * By default, the cached result will be used indefinitely.
+   *
+   * @default undefined
+   */
+  ttl?: number;
+  /**
+   * This is where cached results will be stored. It can be anything you want such as [lru-cache](https://github.com/isaacs/node-lru-cache)
+   * or a redis backed cache as long as it implements a `get` and `set` method defined in {@link AsyncMapLike}.
+   *
+   * By default, this is an instance of [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map).
+   *
+   * @default new Map()
+   */
+  cache?: AsyncMapLike<
+    string,
+    {
+      result?: U;
+      lastUpdated?: number;
+      xfetchDelta?: number;
+    }
+  >;
+  /**
+   * Identical behavior to the `cacheKey` option in [p-memoize](https://github.com/sindresorhus/p-memoize#cachekey).
+   * It should return what the cache key based on the parameters of given promise function.
+   *
+   * By default, this will serialize all arguments using `JSON.stringify`.
+   *
+   * @default (...args) => JSON.stringify(args)
+   */
+  getCacheKey?: (...args: Parameters<T>) => string;
+  /**
+   * Determines whether the returned result should be added to the cache.
+   *
+   * By default, this is `undefined` meaning it will always use the returned result for caching.
+   *
+   * @default undefined
+   */
+  shouldIgnoreResult?: (
+    result: U,
+    args: Parameters<T>
+  ) => boolean | Promise<boolean>;
+  /**
+   * This is the beta value used in [optimal probabilistic cache stampede prevention](https://cseweb.ucsd.edu/~avattani/papers/cache_stampede.pdf)
+   * where values more than 1 favors earlier revalidation while values less than 1 favors later revalidation.
+   *
+   * By default, this is set to 1 so revalidation of a cached result will happen at a random time slightly before expiry.
+   * **If you wish to opt-out of this behavior, then set this value to 0.**
+   *
+   * @default 1
+   */
+  xfetchBeta?: number;
+};
+
+/**
+ * Utility to rememeber promises that were made a given function.
+ *
+ * @param promiseFn Promise-returning or async function to remember.
+ * @param {RememberPromiseOptions} options Various options to configure the behavior of this utility.
+ */
+export const rememberPromise = <
+  T extends (...args: any[]) => Promise<any>,
+  U extends Awaited<ReturnType<T>>
+>(
+  promiseFn: T,
+  {
+    allowStale = true,
+    ttl,
+    cache = new Map(),
+    getCacheKey = (...args) => JSON.stringify(args),
+    shouldIgnoreResult,
+    xfetchBeta = 1,
+  }: RememberPromiseOptions<T, U> = {}
+) => {
+  const updatePromises = new Map<string, Promise<U>>();
+  const shouldUpdate = ttl
+    ? (lastUpdated?: number, xfetchDelta?: number) => {
+        if (
+          typeof lastUpdated !== 'number' ||
+          typeof xfetchDelta !== 'number'
+        ) {
+          return true;
+        }
+
+        return (
+          Date.now() - xfetchDelta * xfetchBeta * Math.log(Math.random()) >
+          lastUpdated + ttl
+        );
+      }
+    : (lastUpdated?: number) => !lastUpdated;
+
+  return async (...args: Parameters<T>): Promise<U> => {
+    const cacheKey = getCacheKey(...args);
+    const cacheValue = await cache.get(cacheKey);
+
+    let updatePromise;
+
+    if (shouldUpdate(cacheValue?.lastUpdated, cacheValue?.xfetchDelta)) {
+      updatePromise = updatePromises.get(cacheKey);
+
+      if (!updatePromise) {
+        const startTime = Date.now();
+
+        updatePromise = promiseFn(...args);
+        updatePromises.set(cacheKey, updatePromise);
+
+        updatePromise.then(async result => {
+          try {
+            const ignoredResult = shouldIgnoreResult
+              ? await shouldIgnoreResult(result, args)
+              : false;
+
+            if (!ignoredResult) {
+              const lastUpdated = Date.now();
+
+              await cache.set(cacheKey, {
+                result,
+                lastUpdated,
+                xfetchDelta: lastUpdated - startTime,
+              });
+            }
+          } finally {
+            updatePromises.delete(cacheKey);
+          }
+        });
+      }
+
+      if (!allowStale) {
+        return updatePromise;
+      }
+    }
+
+    if (!cacheValue) {
+      return updatePromise;
+    }
+
+    return cacheValue.result as U;
+  };
+};

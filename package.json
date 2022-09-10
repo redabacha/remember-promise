@@ -1,0 +1,47 @@
+{
+  "name": "remember-promise",
+  "version": "1.0.0",
+  "description": "Remembering promises that were made!",
+  "repository": "https://github.com/redabacha/remember-promise.git",
+  "author": "Reda Bacha",
+  "license": "MIT",
+  "source": "./src/rememberPromise.ts",
+  "main": "./dist/rememberPromise.js",
+  "types": "./dist/rememberPromise.d.ts",
+  "packageManager": "yarn@3.2.3",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf .eslintcache dist tsconfig.tsbuildinfo",
+    "lint": "eslint --cache .",
+    "test": "vitest run"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      "@semantic-release/git",
+      "@semantic-release/github"
+    ]
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
+    "eslint": "^8.23.0",
+    "prettier": "^2.7.1",
+    "semantic-release": "^19.0.5",
+    "typescript": "^4.8.3",
+    "vite": "^3.1.0",
+    "vitest": "^0.23.2"
+  }
+}
