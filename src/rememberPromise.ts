@@ -9,11 +9,12 @@ export type RememberPromiseOptions<
 > = {
   /**
    * Configures how long in milliseconds the cached result should be used before needing to be revalidated.
+   * Additionally, setting this value to a negative number will disable caching.
    *
    * **NOTE: the actual revalidation of the cached result is done slightly before expiry by
    * default. This can be adjusted using the {@link xfetchBeta} option.**
    *
-   * By default, the cached result will be used indefinitely.
+   * By default this is `undefined` so the cached result will be used indefinitely.
    *
    * @default undefined
    */
@@ -22,16 +23,16 @@ export type RememberPromiseOptions<
    * This enables stale-while-revalidate behavior where an expired result can still
    * be used while waiting for it to be updated in the background asynchronously.
    *
-   * By default, this behavior is enabled.
+   * By default this is set to `true` so the behavior is enabled.
    *
    * @default true
    */
   allowStale?: boolean;
   /**
    * This is where cached results will be stored. It can be anything you want such as [lru-cache](https://github.com/isaacs/node-lru-cache)
-   * or a redis backed cache as long as it implements a `get` and `set` method defined in {@link AsyncMapLike}.
+   * or a redis backed cache as long as it implements a `get` and `set` method defined in the {@link AsyncMapLike} type.
    *
-   * By default, this is an instance of [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map).
+   * By default this is a new instance of [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map).
    *
    * @default new Map()
    */
@@ -45,21 +46,25 @@ export type RememberPromiseOptions<
   >;
   /**
    * Identical behavior to the `cacheKey` option in [p-memoize](https://github.com/sindresorhus/p-memoize#cachekey).
-   * It should return what the cache key based on the parameters of given promise function.
+   * It should return what the cache key based on the parameters of a given promise function.
    *
-   * By default, this will serialize all arguments using `JSON.stringify`.
+   * By default this will serialize all arguments using `JSON.stringify`.
    *
    * @default (...args) => JSON.stringify(args)
    */
   getCacheKey?: (...args: Parameters<T>) => string;
   /**
-   * Use this to catch errors caught when attempting to update the cache or if `shouldIgnoreResult` throws an error.
+   * Use this to catch errors when attempting to update the cache or if `shouldIgnoreResult` throws an error.
+   *
+   * By default this is `undefined` which means any errors will be rethrown as an unhandled promise rejection.
+   *
+   * @default undefined
    */
   onCacheUpdateError?: (err: unknown) => unknown;
   /**
    * Determines whether the returned result should be added to the cache.
    *
-   * By default, this is `undefined` meaning it will always use the returned result for caching.
+   * By default this is `undefined` which means it will always use the returned result for caching.
    *
    * @default undefined
    */
@@ -71,7 +76,7 @@ export type RememberPromiseOptions<
    * This is the beta value used in [optimal probabilistic cache stampede prevention](https://cseweb.ucsd.edu/~avattani/papers/cache_stampede.pdf)
    * where values more than 1 favors earlier revalidation while values less than 1 favors later revalidation.
    *
-   * By default, this is set to 1 so revalidation of a cached result will happen at a random time slightly before expiry.
+   * By default this is set to 1 so the revalidation of a cached result will happen at a random time slightly before expiry.
    * **If you wish to opt-out of this behavior, then set this value to 0.**
    *
    * @default 1
