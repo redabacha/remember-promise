@@ -116,10 +116,11 @@ export const rememberPromise = <
     const cacheKey = getCacheKey(...args);
     const cacheValue = await cache.get(cacheKey);
 
-    let updatePromise;
-
-    if (shouldUpdate(cacheValue?.lastUpdated, cacheValue?.xfetchDelta)) {
-      updatePromise = updatePromises.get(cacheKey);
+    if (
+      !cacheValue ||
+      shouldUpdate(cacheValue.lastUpdated, cacheValue.xfetchDelta)
+    ) {
+      let updatePromise = updatePromises.get(cacheKey);
 
       if (!updatePromise) {
         const startTime = Date.now();
@@ -148,13 +149,9 @@ export const rememberPromise = <
         });
       }
 
-      if (!allowStale) {
+      if (!allowStale || !cacheValue) {
         return updatePromise;
       }
-    }
-
-    if (!cacheValue) {
-      return updatePromise;
     }
 
     return cacheValue.result as U;
