@@ -121,37 +121,96 @@ describe('getCacheKey', () => {
 });
 
 describe('onCacheUpdateError', () => {
-  it('should call onCacheUpdateError if errors occurred while updating cache', async () => {
-    const onCacheUpdateError = vi.fn();
-    const promiseFn = createMockPromiseFn();
-    const cachedPromiseFn = rememberPromise(promiseFn, {
-      cache: {
-        get: () => undefined,
-        set: () => {
+  describe('onCacheUpdateError is undefined', () => {
+    it('should throw separately if errors occurred while updating cache', async () => {
+      let updateCacheFn;
+      const promise = Promise.resolve('call');
+      const promiseThenSpy = vi
+        .spyOn(promise, 'then')
+        .mockImplementationOnce(updateCache => {
+          updateCacheFn = updateCache;
+          return Promise.resolve();
+        });
+      const cachedPromiseFn = rememberPromise(() => promise, {
+        shouldIgnoreResult: () => {
           throw new Error('test');
         },
-      },
-      onCacheUpdateError,
+      });
+
+      expect(await cachedPromiseFn()).toBe('call');
+      expect(promiseThenSpy).toHaveBeenCalledTimes(2);
+      await expect(updateCacheFn()).rejects.toThrowError(new Error('test'));
     });
 
-    expect(await cachedPromiseFn()).toBe('call-1');
-    expect(onCacheUpdateError).toHaveBeenCalledTimes(1);
-    expect(onCacheUpdateError).toHaveBeenCalledWith(new Error('test'));
+    it('should throw separately if errors occurred while calling shouldIgnoreResult', async () => {
+      let updateCacheFn;
+      const promise = Promise.resolve('call');
+      const promiseThenSpy = vi
+        .spyOn(promise, 'then')
+        .mockImplementationOnce(updateCache => {
+          updateCacheFn = updateCache;
+          return Promise.resolve();
+        });
+      const cachedPromiseFn = rememberPromise(() => promise, {
+        shouldIgnoreResult: () => {
+          throw new Error('test');
+        },
+      });
+
+      expect(await cachedPromiseFn()).toBe('call');
+      expect(promiseThenSpy).toHaveBeenCalledTimes(2);
+      await expect(updateCacheFn()).rejects.toThrowError(new Error('test'));
+    });
   });
 
-  it('should call onCacheUpdateError if errors occurred while calling shouldIgnoreResult', async () => {
-    const onCacheUpdateError = vi.fn();
-    const promiseFn = createMockPromiseFn();
-    const cachedPromiseFn = rememberPromise(promiseFn, {
-      onCacheUpdateError,
-      shouldIgnoreResult: () => {
-        throw new Error('test');
-      },
+  describe('onCacheUpdateError is not undefined', () => {
+    it('should call onCacheUpdateError if errors occurred while updating cache', async () => {
+      let updateCacheFn;
+      const onCacheUpdateError = vi.fn();
+      const promise = Promise.resolve('call');
+      const promiseThenSpy = vi
+        .spyOn(promise, 'then')
+        .mockImplementationOnce(updateCache => {
+          updateCacheFn = updateCache;
+          return Promise.resolve();
+        });
+      const cachedPromiseFn = rememberPromise(() => promise, {
+        onCacheUpdateError,
+        shouldIgnoreResult: () => {
+          throw new Error('test');
+        },
+      });
+
+      expect(await cachedPromiseFn()).toBe('call');
+      expect(promiseThenSpy).toHaveBeenCalledTimes(2);
+      await expect(updateCacheFn()).resolves.toBeUndefined();
+      expect(onCacheUpdateError).toHaveBeenCalledTimes(1);
+      expect(onCacheUpdateError).toHaveBeenCalledWith(new Error('test'));
     });
 
-    expect(await cachedPromiseFn()).toBe('call-1');
-    expect(onCacheUpdateError).toHaveBeenCalledTimes(1);
-    expect(onCacheUpdateError).toHaveBeenCalledWith(new Error('test'));
+    it('should call onCacheUpdateError if errors occurred while calling shouldIgnoreResult', async () => {
+      let updateCacheFn;
+      const onCacheUpdateError = vi.fn();
+      const promise = Promise.resolve('call');
+      const promiseThenSpy = vi
+        .spyOn(promise, 'then')
+        .mockImplementationOnce(updateCache => {
+          updateCacheFn = updateCache;
+          return Promise.resolve();
+        });
+      const cachedPromiseFn = rememberPromise(() => promise, {
+        onCacheUpdateError,
+        shouldIgnoreResult: () => {
+          throw new Error('test');
+        },
+      });
+
+      expect(await cachedPromiseFn()).toBe('call');
+      expect(promiseThenSpy).toHaveBeenCalledTimes(2);
+      await expect(updateCacheFn()).resolves.toBeUndefined();
+      expect(onCacheUpdateError).toHaveBeenCalledTimes(1);
+      expect(onCacheUpdateError).toHaveBeenCalledWith(new Error('test'));
+    });
   });
 });
 
