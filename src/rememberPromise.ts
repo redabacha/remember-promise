@@ -8,15 +8,6 @@ export type RememberPromiseOptions<
   U extends Awaited<ReturnType<T>> = Awaited<ReturnType<T>>
 > = {
   /**
-   * This enables stale-while-revalidate behavior where an expired result can still
-   * be used while waiting for it to be updated in the background asynchronously.
-   *
-   * By default, this behavior is enabled.
-   *
-   * @default true
-   */
-  allowStale?: boolean;
-  /**
    * Configures how long in milliseconds the cached result should be used before needing to be revalidated.
    *
    * **NOTE: the actual revalidation of the cached result is done slightly before expiry by
@@ -27,6 +18,15 @@ export type RememberPromiseOptions<
    * @default undefined
    */
   ttl?: number;
+  /**
+   * This enables stale-while-revalidate behavior where an expired result can still
+   * be used while waiting for it to be updated in the background asynchronously.
+   *
+   * By default, this behavior is enabled.
+   *
+   * @default true
+   */
+  allowStale?: boolean;
   /**
    * This is where cached results will be stored. It can be anything you want such as [lru-cache](https://github.com/isaacs/node-lru-cache)
    * or a redis backed cache as long as it implements a `get` and `set` method defined in {@link AsyncMapLike}.
@@ -76,7 +76,7 @@ export type RememberPromiseOptions<
 };
 
 /**
- * Utility to rememeber promises that were made a given function.
+ * Utility to remember promises that were made a given function.
  *
  * @param promiseFn Promise-returning or async function to remember.
  * @param {RememberPromiseOptions} options Various options to configure the behavior of this utility.
@@ -87,8 +87,8 @@ export const rememberPromise = <
 >(
   promiseFn: T,
   {
-    allowStale = true,
     ttl,
+    allowStale = true,
     cache = new Map(),
     getCacheKey = (...args) => JSON.stringify(args),
     shouldIgnoreResult,
