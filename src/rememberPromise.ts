@@ -38,9 +38,9 @@ export type RememberPromiseOptions<
   cache?: AsyncMapLike<
     string,
     {
-      result?: U;
-      lastUpdated?: number;
-      xfetchDelta?: number;
+      result: U;
+      lastUpdated: number;
+      xfetchDelta: number;
     }
   >;
   /**
@@ -97,20 +97,10 @@ export const rememberPromise = <
 ) => {
   const updatePromises = new Map<string, Promise<U>>();
   const shouldUpdate = ttl
-    ? (lastUpdated?: number, xfetchDelta?: number) => {
-        if (
-          typeof lastUpdated !== 'number' ||
-          typeof xfetchDelta !== 'number'
-        ) {
-          return true;
-        }
-
-        return (
-          Date.now() - xfetchDelta * xfetchBeta * Math.log(Math.random()) >
-          lastUpdated + ttl
-        );
-      }
-    : (lastUpdated?: number) => !lastUpdated;
+    ? (lastUpdated: number, xfetchDelta: number) =>
+        Date.now() - xfetchDelta * xfetchBeta * Math.log(Math.random()) >
+        lastUpdated + ttl
+    : (lastUpdated: number) => !lastUpdated;
 
   return async (...args: Parameters<T>): Promise<U> => {
     const cacheKey = getCacheKey(...args);
