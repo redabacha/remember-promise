@@ -80,7 +80,7 @@ export type RememberPromiseOptions<
 };
 
 /**
- * Utility to remember promises that were made a given function.
+ * Utility to remember promises that were made by a given function.
  *
  * @param promiseFn Promise-returning or async function to remember.
  * @param {RememberPromiseOptions} options Various options to configure the behavior of this utility.
