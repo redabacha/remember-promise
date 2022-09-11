@@ -1,6 +1,6 @@
 {
   "name": "remember-promise",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Remembering promises that were made!",
   "repository": "https://github.com/redabacha/remember-promise.git",
   "author": "Reda Bacha",
