@@ -53,6 +53,10 @@ export type RememberPromiseOptions<
    */
   getCacheKey?: (...args: Parameters<T>) => string;
   /**
+   * Use this to catch errors caught when attempting to update the cache or if `shouldIgnoreResult` throws an error.
+   */
+  onCacheUpdateError?: (err: unknown) => unknown;
+  /**
    * Determines whether the returned result should be added to the cache.
    *
    * By default, this is `undefined` meaning it will always use the returned result for caching.
@@ -91,6 +95,7 @@ export const rememberPromise = <
     allowStale = true,
     cache = new Map(),
     getCacheKey = (...args) => JSON.stringify(args),
+    onCacheUpdateError,
     shouldIgnoreResult,
     xfetchBeta = 1,
   }: RememberPromiseOptions<T, U> = {}
@@ -132,6 +137,12 @@ export const rememberPromise = <
                 lastUpdated,
                 xfetchDelta: lastUpdated - startTime,
               });
+            }
+          } catch (e) {
+            if (onCacheUpdateError) {
+              onCacheUpdateError(e);
+            } else {
+              throw e;
             }
           } finally {
             updatePromises.delete(cacheKey);

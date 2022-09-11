@@ -54,7 +54,7 @@ describe('ttl', () => {
     expect(promiseFn).toHaveBeenCalledTimes(2);
   });
 
-  it('should not call promiseFn if ttl is set and not expired', async () => {
+  it('should not call promiseFn again if ttl is set and not expired', async () => {
     const promiseFn = createMockPromiseFn();
     const cachedPromiseFn = rememberPromise(promiseFn, { ttl: 30_000 });
 
@@ -117,6 +117,41 @@ describe('getCacheKey', () => {
     expect(await cachedPromiseFn()).toBe('call-1');
     expect(await cachedPromiseFn()).toBe('call-2');
     expect(promiseFn).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('onCacheUpdateError', () => {
+  it('should call onCacheUpdateError if errors occurred while updating cache', async () => {
+    const onCacheUpdateError = vi.fn();
+    const promiseFn = createMockPromiseFn();
+    const cachedPromiseFn = rememberPromise(promiseFn, {
+      cache: {
+        get: () => undefined,
+        set: () => {
+          throw new Error('test');
+        },
+      },
+      onCacheUpdateError,
+    });
+
+    expect(await cachedPromiseFn()).toBe('call-1');
+    expect(onCacheUpdateError).toHaveBeenCalledTimes(1);
+    expect(onCacheUpdateError).toHaveBeenCalledWith(new Error('test'));
+  });
+
+  it('should call onCacheUpdateError if errors occurred while calling shouldIgnoreResult', async () => {
+    const onCacheUpdateError = vi.fn();
+    const promiseFn = createMockPromiseFn();
+    const cachedPromiseFn = rememberPromise(promiseFn, {
+      onCacheUpdateError,
+      shouldIgnoreResult: () => {
+        throw new Error('test');
+      },
+    });
+
+    expect(await cachedPromiseFn()).toBe('call-1');
+    expect(onCacheUpdateError).toHaveBeenCalledTimes(1);
+    expect(onCacheUpdateError).toHaveBeenCalledWith(new Error('test'));
   });
 });
 

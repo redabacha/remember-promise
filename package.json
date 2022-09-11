@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf .eslintcache coverage dist tsconfig.tsbuildinfo",
+    "clean": "rm -rf .eslintcache coverage dist node_modules tsconfig.tsbuildinfo",
     "lint": "eslint --cache .",
     "test": "vitest run"
   },
