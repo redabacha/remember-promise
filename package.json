@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf .eslintcache dist tsconfig.tsbuildinfo",
+    "clean": "rm -rf .eslintcache coverage dist tsconfig.tsbuildinfo",
     "lint": "eslint --cache .",
     "test": "vitest run"
   },
@@ -37,6 +37,7 @@
     "@semantic-release/git": "^10.0.1",
     "@typescript-eslint/eslint-plugin": "^5.36.2",
     "@typescript-eslint/parser": "^5.36.2",
+    "@vitest/coverage-c8": "^0.23.2",
     "eslint": "^8.23.0",
     "prettier": "^2.7.1",
     "semantic-release": "^19.0.5",

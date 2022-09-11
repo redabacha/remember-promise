@@ -1,6 +1,18 @@
 import { beforeEach, expect, it, vi } from 'vitest';
 import { rememberPromise } from './rememberPromise.js';
 
+declare global {
+  const process: { nextTick: () => void };
+}
+
+const createMockPromiseFn = () => {
+  let callCount = 1;
+  return vi.fn(async () => {
+    vi.setSystemTime(Date.now() + 3000);
+    return `call-${callCount++}`;
+  });
+};
+
 beforeEach(() => {
   vi.useFakeTimers();
 
@@ -10,9 +22,7 @@ beforeEach(() => {
 });
 
 it('should never call promiseFn again if ttl is not set', async () => {
-  const promiseFn = vi.fn(async () => {
-    /* noop */
-  });
+  const promiseFn = createMockPromiseFn();
   const cachedPromiseFn = rememberPromise(promiseFn);
 
   await cachedPromiseFn();
@@ -23,9 +33,7 @@ it('should never call promiseFn again if ttl is not set', async () => {
 });
 
 it('should call promiseFn again if ttl is set and expired', async () => {
-  const promiseFn = vi.fn(async () => {
-    /* noop */
-  });
+  const promiseFn = createMockPromiseFn();
   const cachedPromiseFn = rememberPromise(promiseFn, { ttl: 30_000 });
 
   await cachedPromiseFn();
@@ -36,9 +44,7 @@ it('should call promiseFn again if ttl is set and expired', async () => {
 });
 
 it('should not call promiseFn if ttl is set and not expired', async () => {
-  const promiseFn = vi.fn(async () => {
-    /* noop */
-  });
+  const promiseFn = createMockPromiseFn();
   const cachedPromiseFn = rememberPromise(promiseFn, { ttl: 30_000 });
 
   await cachedPromiseFn();
@@ -49,55 +55,50 @@ it('should not call promiseFn if ttl is set and not expired', async () => {
 });
 
 it('should return previous cached result after ttl expired and allowStale is true', async () => {
-  const promiseFn = vi
-    .fn(async () => 'default')
-    .mockReturnValueOnce(Promise.resolve('first'));
+  const promiseFn = createMockPromiseFn();
   const cachedPromiseFn = rememberPromise(promiseFn, {
     allowStale: true,
     ttl: 30_000,
   });
 
-  expect(await cachedPromiseFn()).toBe('first');
+  expect(await cachedPromiseFn()).toBe('call-1');
   vi.setSystemTime(Date.now() + 30_001);
-  expect(await cachedPromiseFn()).toBe('first');
+  expect(await cachedPromiseFn()).toBe('call-1');
+  await new Promise(process.nextTick); // wait for cache to update
+  expect(await cachedPromiseFn()).toBe('call-2');
 });
 
 it('should not return previous cached result after ttl expired and allowStale is false', async () => {
-  const promiseFn = vi
-    .fn(async () => 'default')
-    .mockReturnValueOnce(Promise.resolve('first'));
+  const promiseFn = createMockPromiseFn();
   const cachedPromiseFn = rememberPromise(promiseFn, {
     allowStale: false,
     ttl: 30_000,
   });
 
-  expect(await cachedPromiseFn()).toBe('first');
+  expect(await cachedPromiseFn()).toBe('call-1');
   vi.setSystemTime(Date.now() + 30_001);
-  expect(await cachedPromiseFn()).toBe('default');
+  expect(await cachedPromiseFn()).toBe('call-2');
+  expect(promiseFn).toHaveBeenCalledTimes(2);
 });
 
 it('should only call promiseFn once when updating cache', async () => {
-  const promiseFn = vi
-    .fn(async () => 'default')
-    .mockReturnValueOnce(Promise.resolve('first'));
+  const promiseFn = createMockPromiseFn();
   const cachedPromiseFn = rememberPromise(promiseFn);
 
   expect(
     await Promise.all([cachedPromiseFn(), cachedPromiseFn()])
-  ).toStrictEqual(['first', 'first']);
+  ).toStrictEqual(['call-1', 'call-1']);
   expect(promiseFn).toHaveBeenCalledTimes(1);
 });
 
 it('should not update cache if shouldIgnoreResult returns true', async () => {
-  const promiseFn = vi
-    .fn(async () => 'default')
-    .mockReturnValueOnce(Promise.resolve('first'));
+  const promiseFn = createMockPromiseFn();
   const cachedPromiseFn = rememberPromise(promiseFn, {
-    shouldIgnoreResult: result => result === 'first',
+    shouldIgnoreResult: result => result === 'call-1',
   });
 
-  expect(await cachedPromiseFn()).toBe('first');
-  expect(await cachedPromiseFn()).toBe('default');
-  expect(await cachedPromiseFn()).toBe('default');
+  expect(await cachedPromiseFn()).toBe('call-1');
+  expect(await cachedPromiseFn()).toBe('call-2');
+  expect(await cachedPromiseFn()).toBe('call-2');
   expect(promiseFn).toHaveBeenCalledTimes(2);
 });
