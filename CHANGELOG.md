@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/redabacha/remember-promise/compare/v1.0.1...v1.1.0) (2022-09-11)
+
+
+### Features
+
+* add new onCacheUpdateError option ([dfaea78](https://github.com/redabacha/remember-promise/commit/dfaea783ee8ae9b57d89cede13f79f4d0bbbbd09))
+
 ## [1.0.1](https://github.com/redabacha/remember-promise/compare/v1.0.0...v1.0.1) (2022-09-11)
 
 
