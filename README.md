@@ -33,15 +33,20 @@ pnpm install remember-promise
 
 ## Usage
 
-```ts
+```js
 import { rememberPromise } from 'remember-promise';
 
-const getAllRedditFeed = rememberPromise(() =>
-  fetch('https://www.reddit.com/r/all.json').then(res => res.json())
+const getRedditFeed = rememberPromise(
+  subreddit =>
+    fetch(`https://www.reddit.com/r/${subreddit}.json`).then(res => res.json()),
+  {
+    ttl: 300_000, // 5 minutes before the result must be revalidated again
+    /* see below for a full list of available options */
+  }
 );
 
-const firstResult = await getAllRedditFeed();
-const secondResult = await getAllRedditFeed(); // this call is cached
+const firstResult = await getRedditFeed('all');
+const secondResult = await getRedditFeed('all'); // this call is cached
 ```
 
 ## Options
