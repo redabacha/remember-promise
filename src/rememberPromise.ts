@@ -45,14 +45,14 @@ export type RememberPromiseOptions<
     }
   >;
   /**
-   * Identical behavior to the `cacheKey` option in [p-memoize](https://github.com/sindresorhus/p-memoize#cachekey).
-   * It should return what the cache key based on the parameters of a given promise function.
+   * Identical behavior to the `cacheKey` option in [p-memoize](https://github.com/sindresorhus/p-memoize#cachekey) except that
+   * it's allowed to return a promise. It should return what the cache key based on the parameters of a given promise function.
    *
    * By default this will serialize all arguments using `JSON.stringify`.
    *
    * @default (...args) => JSON.stringify(args)
    */
-  getCacheKey?: (...args: Parameters<T>) => string;
+  getCacheKey?: (...args: Parameters<T>) => string | Promise<string>;
   /**
    * Use this to catch errors when attempting to update the cache or if `shouldIgnoreResult` throws an error.
    *
@@ -113,7 +113,7 @@ export const rememberPromise = <
     : (lastUpdated: number) => !lastUpdated;
 
   return async (...args: Parameters<T>): Promise<U> => {
-    const cacheKey = getCacheKey(...args);
+    const cacheKey = await getCacheKey(...args);
     const cacheValue = await cache.get(cacheKey);
 
     if (
