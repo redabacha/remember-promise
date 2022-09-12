@@ -5,11 +5,11 @@
 
 A simple utility to remember promises that were made! It is greatly inspired by the [p-memoize](https://github.com/sindresorhus/p-memoize) utility but with additional built-in features and changes such as:
 
-- stale-while-revalidate behavior
 - ttl expiry
-- [optimal probabilistic cache stampede prevention](https://cseweb.ucsd.edu/~avattani/papers/cache_stampede.pdf)
+- stale-while-revalidate behavior
 - ability to ignore results from being cached
-- zero dependencies, commonjs and guaranteed browser support!
+- [optimal probabilistic cache stampede prevention](https://cseweb.ucsd.edu/~avattani/papers/cache_stampede.pdf)
+- zero dependencies + [tiny bundle size](https://bundlephobia.com/package/remember-promise@latest) + commonjs, deno and browser support!
 
 ## Installation
 
