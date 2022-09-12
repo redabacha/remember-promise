@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/redabacha/remember-promise/compare/v1.2.0...v1.3.0) (2022-09-12)
+
+
+### Features
+
+* allow getCacheKey to be async ([3288a4a](https://github.com/redabacha/remember-promise/commit/3288a4ad2966530853d5d11aba72ef570b4919c8))
+
 # [1.1.0](https://github.com/redabacha/remember-promise/compare/v1.0.1...v1.1.0) (2022-09-11)
 
 
