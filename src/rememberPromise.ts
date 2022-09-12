@@ -160,6 +160,6 @@ export const rememberPromise = <
       }
     }
 
-    return cacheValue.result as U;
+    return cacheValue.result;
   };
 };
