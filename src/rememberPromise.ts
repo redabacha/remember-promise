@@ -46,7 +46,7 @@ export type RememberPromiseOptions<
   >;
   /**
    * Identical behavior to the `cacheKey` option in [p-memoize](https://github.com/sindresorhus/p-memoize#cachekey) except that
-   * it's allowed to return a promise. It should return what the cache key based on the parameters of a given promise function.
+   * it's allowed to return a promise. It should return what the cache key is based on the parameters of the given function.
    *
    * By default this will serialize all arguments using `JSON.stringify`.
    *
