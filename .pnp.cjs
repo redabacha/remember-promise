@@ -38,7 +38,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["semantic-release", "npm:19.0.5"],\
             ["typescript", "patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=701156"],\
             ["vite", "virtual:2db1e073863e91a605f1bc5761e945101184e095006d6a031c23dc25c2c43e243854185204c3accc947ff95a78ead51c66c93d9464d47c0ac9628af97c70f2c1#npm:3.2.2"],\
-            ["vitest", "virtual:3d1fe0f4e6436eddbefa64114052ec7ca4d63b8d96cb4ce6470714e5375c520e833858e5020df1a4ed62e67b69f6ee4873314763223c05aa97d2d96287eff4be#npm:0.24.5"]\
+            ["vitest", "virtual:6d271a6b585cc141d73ee4e8cd3044a2905cd89d3bcc8577803612f9e00a9e59e263e9ef37b0dbe879ecf176e8b0d78db03b516f1c857c3e40017f8a050486e5#npm:0.25.1"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -1211,6 +1211,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packagePeers": [\
             "@types/acorn",\
             "acorn"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["acorn-walk", [\
+        ["npm:8.2.0", {\
+          "packageLocation": "./.yarn/cache/acorn-walk-npm-8.2.0-2f2cac3177-1715e76c01.zip/node_modules/acorn-walk/",\
+          "packageDependencies": [\
+            ["acorn-walk", "npm:8.2.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -5415,7 +5424,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["semantic-release", "npm:19.0.5"],\
             ["typescript", "patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=701156"],\
             ["vite", "virtual:2db1e073863e91a605f1bc5761e945101184e095006d6a031c23dc25c2c43e243854185204c3accc947ff95a78ead51c66c93d9464d47c0ac9628af97c70f2c1#npm:3.2.2"],\
-            ["vitest", "virtual:3d1fe0f4e6436eddbefa64114052ec7ca4d63b8d96cb4ce6470714e5375c520e833858e5020df1a4ed62e67b69f6ee4873314763223c05aa97d2d96287eff4be#npm:0.24.5"]\
+            ["vitest", "virtual:6d271a6b585cc141d73ee4e8cd3044a2905cd89d3bcc8577803612f9e00a9e59e263e9ef37b0dbe879ecf176e8b0d78db03b516f1c857c3e40017f8a050486e5#npm:0.25.1"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -6420,6 +6429,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
+        ["npm:0.25.1", {\
+          "packageLocation": "./.yarn/cache/vitest-npm-0.25.1-cbcae69d89-9f0bfc8a55.zip/node_modules/vitest/",\
+          "packageDependencies": [\
+            ["vitest", "npm:0.25.1"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
         ["virtual:3d1fe0f4e6436eddbefa64114052ec7ca4d63b8d96cb4ce6470714e5375c520e833858e5020df1a4ed62e67b69f6ee4873314763223c05aa97d2d96287eff4be#npm:0.24.5", {\
           "packageLocation": "./.yarn/__virtual__/vitest-virtual-2db1e07386/0/cache/vitest-npm-0.24.5-116b855edf-801d153082.zip/node_modules/vitest/",\
           "packageDependencies": [\
@@ -6440,6 +6456,49 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["happy-dom", null],\
             ["jsdom", null],\
             ["local-pkg", "npm:0.4.2"],\
+            ["strip-literal", "npm:0.4.2"],\
+            ["tinybench", "npm:2.3.1"],\
+            ["tinypool", "npm:0.3.0"],\
+            ["tinyspy", "npm:1.0.2"],\
+            ["vite", "virtual:2db1e073863e91a605f1bc5761e945101184e095006d6a031c23dc25c2c43e243854185204c3accc947ff95a78ead51c66c93d9464d47c0ac9628af97c70f2c1#npm:3.2.2"]\
+          ],\
+          "packagePeers": [\
+            "@edge-runtime/vm",\
+            "@types/edge-runtime__vm",\
+            "@types/happy-dom",\
+            "@types/jsdom",\
+            "@types/vitest__browser",\
+            "@types/vitest__ui",\
+            "@vitest/browser",\
+            "@vitest/ui",\
+            "happy-dom",\
+            "jsdom"\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["virtual:6d271a6b585cc141d73ee4e8cd3044a2905cd89d3bcc8577803612f9e00a9e59e263e9ef37b0dbe879ecf176e8b0d78db03b516f1c857c3e40017f8a050486e5#npm:0.25.1", {\
+          "packageLocation": "./.yarn/__virtual__/vitest-virtual-fcaa9a0fd9/0/cache/vitest-npm-0.25.1-cbcae69d89-9f0bfc8a55.zip/node_modules/vitest/",\
+          "packageDependencies": [\
+            ["vitest", "virtual:6d271a6b585cc141d73ee4e8cd3044a2905cd89d3bcc8577803612f9e00a9e59e263e9ef37b0dbe879ecf176e8b0d78db03b516f1c857c3e40017f8a050486e5#npm:0.25.1"],\
+            ["@edge-runtime/vm", null],\
+            ["@types/chai", "npm:4.3.3"],\
+            ["@types/chai-subset", "npm:1.3.3"],\
+            ["@types/edge-runtime__vm", null],\
+            ["@types/happy-dom", null],\
+            ["@types/jsdom", null],\
+            ["@types/node", "npm:18.7.16"],\
+            ["@types/vitest__browser", null],\
+            ["@types/vitest__ui", null],\
+            ["@vitest/browser", null],\
+            ["@vitest/ui", null],\
+            ["acorn", "npm:8.8.0"],\
+            ["acorn-walk", "npm:8.2.0"],\
+            ["chai", "npm:4.3.6"],\
+            ["debug", "virtual:2db1e073863e91a605f1bc5761e945101184e095006d6a031c23dc25c2c43e243854185204c3accc947ff95a78ead51c66c93d9464d47c0ac9628af97c70f2c1#npm:4.3.4"],\
+            ["happy-dom", null],\
+            ["jsdom", null],\
+            ["local-pkg", "npm:0.4.2"],\
+            ["source-map", "npm:0.6.1"],\
             ["strip-literal", "npm:0.4.2"],\
             ["tinybench", "npm:2.3.1"],\
             ["tinypool", "npm:0.3.0"],\
