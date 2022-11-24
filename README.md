@@ -9,7 +9,7 @@ A simple utility to remember promises that were made! It is greatly inspired by 
 - stale-while-revalidate behavior
 - ability to ignore results from being cached
 - [optimal probabilistic cache stampede prevention](https://cseweb.ucsd.edu/~avattani/papers/cache_stampede.pdf)
-- zero dependencies + [tiny bundle size](https://bundlephobia.com/package/remember-promise@latest) + commonjs, deno (via [esm.sh](https://esm.sh/remember-promise@latest)) and browser support!
+- zero dependencies + [tiny bundle size](https://bundlephobia.com/package/remember-promise@latest) + commonjs, deno (via [esm.sh](https://esm.sh/remember-promise@latest) or [npm specifiers](https://deno.land/manual/node/npm_specifiers)) and browser support!
 
 ## Installation
 
