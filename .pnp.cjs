@@ -34,7 +34,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typescript-eslint/parser", "virtual:6d271a6b585cc141d73ee4e8cd3044a2905cd89d3bcc8577803612f9e00a9e59e263e9ef37b0dbe879ecf176e8b0d78db03b516f1c857c3e40017f8a050486e5#npm:5.48.0"],\
             ["@vitest/coverage-c8", "npm:0.26.3"],\
             ["eslint", "npm:8.32.0"],\
-            ["prettier", "npm:2.8.2"],\
+            ["prettier", "npm:2.8.3"],\
             ["semantic-release", "npm:20.0.2"],\
             ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=d73830"],\
             ["vite", "virtual:0156358f4d4e6936a6358c96ca7c55d1d2531aba75781f09b4eb20cc8e4dc03125fa97a8a3605068855bfb5ca014a1abfc821502a9a90118e7a5ab3c8ab1110d#npm:4.0.4"],\
@@ -5355,10 +5355,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["prettier", [\
-        ["npm:2.8.2", {\
-          "packageLocation": "./.yarn/cache/prettier-npm-2.8.2-201e3d1dcf-740c56c212.zip/node_modules/prettier/",\
+        ["npm:2.8.3", {\
+          "packageLocation": "./.yarn/cache/prettier-npm-2.8.3-2c5624c4ca-92f2ceb522.zip/node_modules/prettier/",\
           "packageDependencies": [\
-            ["prettier", "npm:2.8.2"]\
+            ["prettier", "npm:2.8.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -5679,7 +5679,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typescript-eslint/parser", "virtual:6d271a6b585cc141d73ee4e8cd3044a2905cd89d3bcc8577803612f9e00a9e59e263e9ef37b0dbe879ecf176e8b0d78db03b516f1c857c3e40017f8a050486e5#npm:5.48.0"],\
             ["@vitest/coverage-c8", "npm:0.26.3"],\
             ["eslint", "npm:8.32.0"],\
-            ["prettier", "npm:2.8.2"],\
+            ["prettier", "npm:2.8.3"],\
             ["semantic-release", "npm:20.0.2"],\
             ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=d73830"],\
             ["vite", "virtual:0156358f4d4e6936a6358c96ca7c55d1d2531aba75781f09b4eb20cc8e4dc03125fa97a8a3605068855bfb5ca014a1abfc821502a9a90118e7a5ab3c8ab1110d#npm:4.0.4"],\
