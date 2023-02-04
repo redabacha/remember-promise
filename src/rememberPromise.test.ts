@@ -1,10 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { rememberPromise } from './rememberPromise.js';
 
-declare global {
-  const process: { nextTick: () => void };
-}
-
 const createMockPromiseFn = () => {
   let callCount = 1;
   return vi.fn(async () => {
