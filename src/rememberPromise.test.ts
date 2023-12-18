@@ -60,6 +60,17 @@ describe("ttl", () => {
 
     expect(promiseFn).toHaveBeenCalledTimes(1);
   });
+
+  it("should throttle calls to promiseFn", async () => {
+    const promiseFn = createMockPromiseFn();
+    const cachedPromiseFn = rememberPromise(promiseFn, { ttl: 0 });
+
+    cachedPromiseFn();
+    cachedPromiseFn();
+    await cachedPromiseFn();
+
+    expect(promiseFn).toHaveBeenCalledTimes(1);
+  });
 });
 
 describe("allowStale", () => {
@@ -215,7 +226,7 @@ describe("shouldIgnoreResult", () => {
     const promiseFn = createMockPromiseFn();
     const cachedPromiseFn = rememberPromise(promiseFn, {
       shouldIgnoreResult: (result) => result !== "call-1",
-      ttl: -1, // forces shouldUpdate to always return true
+      ttl: 0,
     });
 
     expect(await cachedPromiseFn()).toBe("call-1");
@@ -227,7 +238,7 @@ describe("shouldIgnoreResult", () => {
     const promiseFn = createMockPromiseFn();
     const cachedPromiseFn = rememberPromise(promiseFn, {
       shouldIgnoreResult: (result) => result === "call-1",
-      ttl: -1,
+      ttl: 0,
     });
 
     expect(await cachedPromiseFn()).toBe("call-1");

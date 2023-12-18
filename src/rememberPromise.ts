@@ -9,14 +9,14 @@ export type RememberPromiseOptions<
 > = {
   /**
    * Configures how long in milliseconds the cached result should be used before needing to be revalidated.
-   * Additionally, setting this value to a negative number will disable caching.
+   * Additionally, setting this value to zero or a negative number will disable caching.
    *
    * **NOTE: the actual revalidation of the cached result is done slightly before expiry by
    * default. This can be adjusted using the {@link xfetchBeta} option.**
    *
-   * By default this is `undefined` so the cached result will be used indefinitely.
+   * By default this is `Infinity` so the cached result will be used indefinitely.
    *
-   * @default undefined
+   * @default Infinity
    */
   ttl?: number;
   /**
@@ -96,7 +96,7 @@ export const rememberPromise = <
 >(
   promiseFn: T,
   {
-    ttl,
+    ttl = Infinity,
     allowStale = true,
     cache = new Map(),
     getCacheKey = (...args) => JSON.stringify(args),
@@ -106,11 +106,17 @@ export const rememberPromise = <
   }: RememberPromiseOptions<T, U> = {},
 ) => {
   const updatePromises = new Map<string, Promise<U>>();
-  const shouldUpdate = ttl
-    ? (lastUpdated: number, xfetchDelta: number) =>
-        Date.now() - xfetchDelta * xfetchBeta * Math.log(Math.random()) >
-        lastUpdated + ttl
-    : (lastUpdated: number) => !lastUpdated;
+
+  let shouldUpdate: (lastUpdated: number, xfetchDelta: number) => boolean;
+  if (!Number.isFinite(ttl)) {
+    shouldUpdate = (lastUpdated) => !lastUpdated;
+  } else if (ttl > 0) {
+    shouldUpdate = (lastUpdated, xfetchDelta) =>
+      Date.now() - xfetchDelta * xfetchBeta * Math.log(Math.random()) >
+      lastUpdated + ttl;
+  } else {
+    shouldUpdate = () => true;
+  }
 
   return async (...args: Parameters<T>): Promise<U> => {
     const cacheKey = await getCacheKey(...args);
