@@ -5,7 +5,7 @@ export type AsyncMapLike<T, U> = {
 
 export type RememberPromiseOptions<
   T extends (...args: any[]) => Promise<any> = (...args: any[]) => Promise<any>,
-  U extends Awaited<ReturnType<T>> = Awaited<ReturnType<T>>
+  U extends Awaited<ReturnType<T>> = Awaited<ReturnType<T>>,
 > = {
   /**
    * Configures how long in milliseconds the cached result should be used before needing to be revalidated.
@@ -70,7 +70,7 @@ export type RememberPromiseOptions<
    */
   shouldIgnoreResult?: (
     result: U,
-    args: Parameters<T>
+    args: Parameters<T>,
   ) => boolean | Promise<boolean>;
   /**
    * This is the beta value used in [optimal probabilistic cache stampede prevention](https://cseweb.ucsd.edu/~avattani/papers/cache_stampede.pdf)
@@ -92,7 +92,7 @@ export type RememberPromiseOptions<
  */
 export const rememberPromise = <
   T extends (...args: any[]) => Promise<any>,
-  U extends Awaited<ReturnType<T>>
+  U extends Awaited<ReturnType<T>>,
 >(
   promiseFn: T,
   {
@@ -103,7 +103,7 @@ export const rememberPromise = <
     onCacheUpdateError,
     shouldIgnoreResult,
     xfetchBeta = 1,
-  }: RememberPromiseOptions<T, U> = {}
+  }: RememberPromiseOptions<T, U> = {},
 ) => {
   const updatePromises = new Map<string, Promise<U>>();
   const shouldUpdate = ttl
@@ -128,7 +128,7 @@ export const rememberPromise = <
         updatePromise = promiseFn(...args);
         updatePromises.set(cacheKey, updatePromise);
 
-        updatePromise.then(async result => {
+        updatePromise.then(async (result) => {
           try {
             const ignoredResult = shouldIgnoreResult
               ? await shouldIgnoreResult(result, args)
