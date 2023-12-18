@@ -17,7 +17,7 @@ beforeEach(() => {
   };
 });
 
-it("should only call promiseFn once when updating cache", async () => {
+it("should throttle calls to promiseFn", async () => {
   const promiseFn = createMockPromiseFn();
   const cachedPromiseFn = rememberPromise(promiseFn);
 
@@ -56,17 +56,6 @@ describe("ttl", () => {
 
     await cachedPromiseFn();
     vi.setSystemTime(Date.now() + 1);
-    await cachedPromiseFn();
-
-    expect(promiseFn).toHaveBeenCalledTimes(1);
-  });
-
-  it("should throttle calls to promiseFn", async () => {
-    const promiseFn = createMockPromiseFn();
-    const cachedPromiseFn = rememberPromise(promiseFn, { ttl: 0 });
-
-    cachedPromiseFn();
-    cachedPromiseFn();
     await cachedPromiseFn();
 
     expect(promiseFn).toHaveBeenCalledTimes(1);
