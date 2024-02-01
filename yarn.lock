@@ -57,16 +57,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/parser@npm:^7.23.3":
-  version: 7.23.6
-  resolution: "@babel/parser@npm:7.23.6"
+"@babel/parser@npm:^7.23.6":
+  version: 7.23.9
+  resolution: "@babel/parser@npm:7.23.9"
   bin:
     parser: ./bin/babel-parser.js
-  checksum: 6f76cd5ccae1fa9bcab3525b0865c6222e9c1d22f87abc69f28c5c7b2c8816a13361f5bd06bddbd5faf903f7320a8feba02545c981468acec45d12a03db7755e
+  checksum: 7df97386431366d4810538db4b9ec538f4377096f720c0591c7587a16f6810e62747e9fbbfa1ff99257fd4330035e4fb1b5b77c7bd3b97ce0d2e3780a6618975
   languageName: node
   linkType: hard
 
-"@babel/types@npm:^7.23.3, @babel/types@npm:^7.8.3":
+"@babel/types@npm:^7.23.6":
+  version: 7.23.9
+  resolution: "@babel/types@npm:7.23.9"
+  dependencies:
+    "@babel/helper-string-parser": "npm:^7.23.4"
+    "@babel/helper-validator-identifier": "npm:^7.22.20"
+    to-fast-properties: "npm:^2.0.0"
+  checksum: edc7bb180ce7e4d2aea10c6972fb10474341ac39ba8fdc4a27ffb328368dfdfbf40fca18e441bbe7c483774500d5c05e222cec276c242e952853dcaf4eb884f7
+  languageName: node
+  linkType: hard
+
+"@babel/types@npm:^7.8.3":
   version: 7.23.6
   resolution: "@babel/types@npm:7.23.6"
   dependencies:
@@ -1271,8 +1282,8 @@ __metadata:
   linkType: hard
 
 "@vitest/coverage-v8@npm:^1.0.4":
-  version: 1.0.4
-  resolution: "@vitest/coverage-v8@npm:1.0.4"
+  version: 1.2.2
+  resolution: "@vitest/coverage-v8@npm:1.2.2"
   dependencies:
     "@ampproject/remapping": "npm:^2.2.1"
     "@bcoe/v8-coverage": "npm:^0.2.3"
@@ -1282,14 +1293,14 @@ __metadata:
     istanbul-lib-source-maps: "npm:^4.0.1"
     istanbul-reports: "npm:^3.1.6"
     magic-string: "npm:^0.30.5"
-    magicast: "npm:^0.3.2"
+    magicast: "npm:^0.3.3"
     picocolors: "npm:^1.0.0"
     std-env: "npm:^3.5.0"
     test-exclude: "npm:^6.0.0"
     v8-to-istanbul: "npm:^9.2.0"
   peerDependencies:
     vitest: ^1.0.0
-  checksum: e4fb7e7f818a320dcef451193a6aba7b4173a3246695fb5c7b406251c860e10a02f41c3a9678301d6d14e9453bef16de5624658bc3abc11775c708bb20f15ace
+  checksum: 90e3cfdc7d36df86f95b4bc372851dbf0a9e78ca9d80177674ebb30cf5dff1e786660016aa7e369bd30ac7d1d3edc18d7ab0f6ccfdc9cdfe04ada0e0b5d5911a
   languageName: node
   linkType: hard
 
@@ -3907,14 +3918,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"magicast@npm:^0.3.2":
-  version: 0.3.2
-  resolution: "magicast@npm:0.3.2"
+"magicast@npm:^0.3.3":
+  version: 0.3.3
+  resolution: "magicast@npm:0.3.3"
   dependencies:
-    "@babel/parser": "npm:^7.23.3"
-    "@babel/types": "npm:^7.23.3"
+    "@babel/parser": "npm:^7.23.6"
+    "@babel/types": "npm:^7.23.6"
     source-map-js: "npm:^1.0.2"
-  checksum: cd157b250d962ccdb313f250509220f10ad63f673d88a0a001d201fd2b2dae90c6c65c4e9b6ce164f05c25c400139715edce750e3e2f41b5a249e29225d6c4fb
+  checksum: 2eeba19545ac4328433be817bd81fcfa8a517ec67599260541e13ce5ce18b27ff8830f1b87d54a1392d408d1b96e44938bf026920f0110edbdfecc96980919b3
   languageName: node
   linkType: hard
 
