@@ -1,9 +1,8 @@
 # [1.4.0](https://github.com/redabacha/remember-promise/compare/v1.3.0...v1.4.0) (2023-12-18)
 
-
 ### Features
 
-* allow ttl to be set to zero ([a6a3920](https://github.com/redabacha/remember-promise/commit/a6a39209063fd710dd7eab25526fb4310701d9fd))
+- allow ttl to be set to zero ([a6a3920](https://github.com/redabacha/remember-promise/commit/a6a39209063fd710dd7eab25526fb4310701d9fd))
 
 # [1.3.0](https://github.com/redabacha/remember-promise/compare/v1.2.0...v1.3.0) (2022-09-12)
 
