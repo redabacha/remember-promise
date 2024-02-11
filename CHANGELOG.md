@@ -1,3 +1,15 @@
+# [1.5.0](https://github.com/redabacha/remember-promise/compare/v1.4.0...v1.5.0) (2024-02-11)
+
+
+### Bug Fixes
+
+* create empty package.json for semantic-release ([b629902](https://github.com/redabacha/remember-promise/commit/b62990253c3af76271b9e01e41489a949f1e1efb))
+
+
+### Features
+
+* port project to deno ([#96](https://github.com/redabacha/remember-promise/issues/96)) ([4d5dc34](https://github.com/redabacha/remember-promise/commit/4d5dc343859fd9b98930363d0be1f207584372b0))
+
 # [1.4.0](https://github.com/redabacha/remember-promise/compare/v1.3.0...v1.4.0) (2023-12-18)
 
 ### Features
