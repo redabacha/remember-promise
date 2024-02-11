@@ -2,6 +2,6 @@
   "lock": false,
   "exclude": ["CHANGELOG.md", "npm"],
   "name": "@reda/remember-promise",
-  "version": "undefined",
+  "version": "1.5.1",
   "exports": "./mod.ts"
 }

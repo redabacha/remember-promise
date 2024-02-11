@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/redabacha/remember-promise/compare/v1.5.0...v1.5.1) (2024-02-11)
+
+
+### Bug Fixes
+
+* add deno.jsonc to semantic-release git assets config ([1e190d0](https://github.com/redabacha/remember-promise/commit/1e190d01e25cede3e1d5e2ec4636e2a83a55bba0))
+
 # [1.5.0](https://github.com/redabacha/remember-promise/compare/v1.4.0...v1.5.0) (2024-02-11)
 
 
