@@ -1,3 +1,15 @@
+# [1.6.0](https://github.com/redabacha/remember-promise/compare/v1.5.1...v1.6.0) (2024-02-11)
+
+
+### Bug Fixes
+
+* set release job contents permission to write ([e0986dc](https://github.com/redabacha/remember-promise/commit/e0986dc8db6fc493aa5e61fdde196b06de86aa62))
+
+
+### Features
+
+* publish to jsr.io ([91734dd](https://github.com/redabacha/remember-promise/commit/91734ddc9a4abf0c755307d2906aef2ff146cb83))
+
 ## [1.5.1](https://github.com/redabacha/remember-promise/compare/v1.5.0...v1.5.1) (2024-02-11)
 
 
