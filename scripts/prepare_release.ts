@@ -5,6 +5,15 @@ import {
 
 const version = Deno.args[0];
 
+if (version) {
+  await Deno.writeTextFile(
+    "deno.jsonc",
+    (
+      await Deno.readTextFile("deno.jsonc")
+    ).replace(/"version": ".*"/, `"version": "${version}"`),
+  );
+}
+
 await emptyDir("./npm");
 await build({
   compilerOptions: {
@@ -37,10 +46,3 @@ await build({
     ]);
   },
 });
-
-await Deno.writeTextFile(
-  "deno.jsonc",
-  (
-    await Deno.readTextFile("deno.jsonc")
-  ).replace(/"version": ".*"/, `"version": "${version}"`),
-);
