@@ -106,7 +106,7 @@ export const rememberPromise = <
     shouldIgnoreResult,
     xfetchBeta = 1,
   }: RememberPromiseOptions<T, U> = {},
-) => {
+): (...args: Parameters<T>) => Promise<U> => {
   const updatePromises = new Map<string, Promise<U>>();
 
   let shouldUpdate: (lastUpdated: number, xfetchDelta: number) => boolean;
