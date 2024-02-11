@@ -1,7 +1,7 @@
 import {
   build,
   emptyDir,
-} from "https://raw.githubusercontent.com/redabacha/dnt/c5cf12d21794fc8e4315668ddfd96c1a46695e0c/mod.ts";
+} from "https://raw.githubusercontent.com/redabacha/dnt/da5a4139a990f2f9f753acc68d5f3ce045d59f09/mod.ts";
 
 const version = Deno.args[0];
 
@@ -17,13 +17,13 @@ if (version) {
 await emptyDir("./npm");
 await build({
   compilerOptions: {
-    declarationMap: true,
     emitDecoratorMetadata: true,
     noUncheckedIndexedAccess: true,
     skipLibCheck: true,
     sourceMap: true,
     target: "ES2022",
   },
+  declarationMap: true,
   entryPoints: ["./mod.ts"],
   esModule: false,
   skipNpmInstall: true,
