@@ -7,24 +7,20 @@ on:
       - main
 jobs:
   test:
-    name: Unit Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: denoland/setup-deno@v1
         with:
-          node-version: 20
-      - run: corepack enable
-      - run: yarn install --immutable --immutable-cache
-      - run: yarn test --coverage
+            deno-version: v1.x
+      - run: deno fmt
+      - run: deno lint
+      - run: deno test
   test-build:
-    name: Test Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: denoland/setup-deno@v1
         with:
-          node-version: 20
-      - run: corepack enable
-      - run: yarn install --immutable --immutable-cache
-      - run: yarn build
+            deno-version: v1.x
+      - run: deno run -A ./scripts/prepare_release.ts

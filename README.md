@@ -3,13 +3,17 @@
 [![npm](https://shields.io/npm/v/remember-promise)](https://www.npmjs.com/package/remember-promise)
 [![license](https://shields.io/github/license/redabacha/remember-promise)](https://github.com/redabacha/remember-promise/blob/main/LICENSE)
 
-A simple utility to remember promises that were made! It is greatly inspired by the [p-memoize](https://github.com/sindresorhus/p-memoize) utility but with additional built-in features and changes such as:
+A simple utility to remember promises that were made! It is greatly inspired by
+the [p-memoize](https://github.com/sindresorhus/p-memoize) utility but with
+additional built-in features and changes such as:
 
 - ttl expiry
 - stale-while-revalidate behavior
 - ability to ignore results from being cached
 - [optimal probabilistic cache stampede prevention](https://cseweb.ucsd.edu/~avattani/papers/cache_stampede.pdf)
-- zero dependencies + [tiny bundle size](https://bundlephobia.com/package/remember-promise@latest) + commonjs, deno (via [esm.sh](https://esm.sh/remember-promise@latest) or [npm specifiers](https://deno.land/manual/node/npm_specifiers)) and browser support!
+- zero dependencies +
+  [tiny bundle size](https://bundlephobia.com/package/remember-promise@latest) +
+  commonjs, deno and browser support!
 
 ## Installation
 
@@ -39,7 +43,7 @@ import { rememberPromise } from "remember-promise";
 const getRedditFeed = rememberPromise(
   (subreddit) =>
     fetch(`https://www.reddit.com/r/${subreddit}.json`).then((res) =>
-      res.json(),
+      res.json()
     ),
   {
     ttl: 300_000, // 5 minutes before the result must be revalidated again
