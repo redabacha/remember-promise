@@ -17,15 +17,12 @@ import {
 import { FakeTime } from "https://deno.land/std@0.215.0/testing/time.ts";
 import { rememberPromise } from "./mod.ts";
 
-let time: FakeTime;
-
 const createMockPromiseFn = () => {
   let callCount = 1;
-  return spy(() => {
-    time.now += 3000;
-    return Promise.resolve(`call-${callCount++}`);
-  });
+  return spy(() => Promise.resolve(`call-${callCount++}`));
 };
+
+let time: FakeTime;
 
 beforeEach(() => {
   time = new FakeTime();
