@@ -15,6 +15,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      # this is a hack for @semantic-release/npm verifyConditions as it expects a package.json to exist already but we only generate it in the prepare step
+      - run: |
+          mkdir npm && echo '{ "name": "remember-promise" }' > npm/package.json
       - run: npx -p @semantic-release/changelog -p @semantic-release/exec -p @semantic-release/git -p semantic-release semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
