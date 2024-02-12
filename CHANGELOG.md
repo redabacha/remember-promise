@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/redabacha/remember-promise/compare/v1.7.0...v1.8.0) (2024-02-12)
+
+
+### Features
+
+* add ability to disable cache ([#98](https://github.com/redabacha/remember-promise/issues/98)) ([b70ed97](https://github.com/redabacha/remember-promise/commit/b70ed9716c319a410efe495b799ff06ebb3956da))
+
 # [1.7.0](https://github.com/redabacha/remember-promise/compare/v1.6.0...v1.7.0) (2024-02-12)
 
 
