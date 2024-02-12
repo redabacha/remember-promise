@@ -1,6 +1,7 @@
 # remember-promise
 
 [![bundle size](https://pkg-size.dev/badge/bundle/827)](https://pkg-size.dev/remember-promise)
+[![codecov](https://codecov.io/gh/redabacha/remember-promise/graph/badge.svg?token=KMRTWA2DHQ)](https://codecov.io/gh/redabacha/remember-promise)
 [![npm](https://shields.io/npm/v/remember-promise)](https://www.npmjs.com/package/remember-promise)
 [![license](https://shields.io/github/license/redabacha/remember-promise)](https://github.com/redabacha/remember-promise/blob/main/LICENSE)
 

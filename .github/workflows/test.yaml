@@ -15,7 +15,13 @@ jobs:
             deno-version: v1.x
       - run: deno fmt
       - run: deno lint
-      - run: deno test
+      - run: deno test --coverage
+      - run: deno coverage --lcov > coverage.lcov
+      - uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.lcov
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   test-build:
     runs-on: ubuntu-latest
     steps:
