@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/redabacha/remember-promise/compare/v1.6.0...v1.7.0) (2024-02-12)
+
+
+### Features
+
+* improve generated documentation ([90c3d2a](https://github.com/redabacha/remember-promise/commit/90c3d2adc6289e5c2dc7756805a056b6eeba49dd))
+
 # [1.6.0](https://github.com/redabacha/remember-promise/compare/v1.5.1...v1.6.0) (2024-02-11)
 
 
