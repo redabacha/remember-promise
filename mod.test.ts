@@ -107,6 +107,24 @@ describe("allowStale", () => {
   });
 });
 
+describe("cache", () => {
+  it("should not call onCacheUpdateError or shouldIgnoreResult if cache is set to false", async () => {
+    const onCacheUpdateErrorSpy = spy(() => {});
+    const shouldIgnoreResultSpy = spy(() => false);
+    const promiseFn = createMockPromiseFn();
+    const cachedPromiseFn = rememberPromise(promiseFn, {
+      cache: false,
+      onCacheUpdateError: onCacheUpdateErrorSpy,
+      shouldIgnoreResult: shouldIgnoreResultSpy,
+    });
+
+    assertEquals(await cachedPromiseFn(), "call-1");
+    assertSpyCalls(promiseFn, 1);
+    assertSpyCalls(onCacheUpdateErrorSpy, 0);
+    assertSpyCalls(shouldIgnoreResultSpy, 0);
+  });
+});
+
 describe("getCacheKey", () => {
   it("should use the same cached result if getCacheKey returns the same key", async () => {
     const promiseFn = createMockPromiseFn();

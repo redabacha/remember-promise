@@ -38,18 +38,23 @@ export interface RememberPromiseOptions<
    * This is where cached results will be stored. It can be anything you want such as [lru-cache](https://github.com/isaacs/node-lru-cache)
    * or a redis backed cache as long as it implements a `get` and `set` method defined in the {@link AsyncMapLike} type.
    *
+   * If you would like to disable caching and only deduplicate identical concurrent calls instead then set this to `false`.
+   * When this is set to `false`, the `onCacheUpdateError` and `shouldIgnoreResult` options will be never be used.
+   *
    * By default this is a new instance of [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map).
    *
    * @default new Map()
    */
-  cache?: AsyncMapLike<
-    string,
-    {
-      result: PromiseFnReturn;
-      lastUpdated: number;
-      xfetchDelta: number;
-    }
-  >;
+  cache?:
+    | AsyncMapLike<
+      string,
+      {
+        result: PromiseFnReturn;
+        lastUpdated: number;
+        xfetchDelta: number;
+      }
+    >
+    | false;
   /**
    * Identical behavior to the `cacheKey` option in [p-memoize](https://github.com/sindresorhus/p-memoize#cachekey) except that
    * it's allowed to return a promise. It should return what the cache key is based on the parameters of the given function.
@@ -127,7 +132,7 @@ export function rememberPromise<
 
   return async (...args: Parameters<PromiseFn>): Promise<PromiseFnReturn> => {
     const cacheKey = await getCacheKey(...args);
-    const cacheValue = await cache.get(cacheKey);
+    const cacheValue = cache && await cache.get(cacheKey);
 
     if (
       !cacheValue ||
@@ -136,35 +141,41 @@ export function rememberPromise<
       let updatePromise = updatePromises.get(cacheKey);
 
       if (!updatePromise) {
-        const startTime = Date.now();
-
         updatePromise = promiseFn(...args);
         updatePromises.set(cacheKey, updatePromise);
 
-        updatePromise.then(async (result) => {
-          try {
-            const ignoredResult = shouldIgnoreResult
-              ? await shouldIgnoreResult(result, args)
-              : false;
+        let cacheUpdatePromise: Promise<void> = updatePromise;
 
-            if (!ignoredResult) {
-              const lastUpdated = Date.now();
+        if (cache) {
+          const startTime = Date.now();
 
-              await cache.set(cacheKey, {
-                result,
-                lastUpdated,
-                xfetchDelta: lastUpdated - startTime,
-              });
+          cacheUpdatePromise = updatePromise.then(async (result) => {
+            try {
+              const ignoredResult = shouldIgnoreResult
+                ? await shouldIgnoreResult(result, args)
+                : false;
+
+              if (!ignoredResult) {
+                const lastUpdated = Date.now();
+
+                await cache.set(cacheKey, {
+                  result,
+                  lastUpdated,
+                  xfetchDelta: lastUpdated - startTime,
+                });
+              }
+            } catch (e) {
+              if (onCacheUpdateError) {
+                onCacheUpdateError(e);
+              } else {
+                throw e;
+              }
             }
-          } catch (e) {
-            if (onCacheUpdateError) {
-              onCacheUpdateError(e);
-            } else {
-              throw e;
-            }
-          } finally {
-            updatePromises.delete(cacheKey);
-          }
+          });
+        }
+
+        cacheUpdatePromise.then(() => {
+          updatePromises.delete(cacheKey);
         });
       }
 
