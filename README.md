@@ -1,5 +1,6 @@
 # remember-promise
 
+[![bundle size](https://pkg-size.dev/badge/bundle/827)](https://pkg-size.dev/remember-promise)
 [![npm](https://shields.io/npm/v/remember-promise)](https://www.npmjs.com/package/remember-promise)
 [![license](https://shields.io/github/license/redabacha/remember-promise)](https://github.com/redabacha/remember-promise/blob/main/LICENSE)
 
@@ -12,8 +13,8 @@ additional built-in features and changes such as:
 - ability to ignore results from being cached
 - [optimal probabilistic cache stampede prevention](https://cseweb.ucsd.edu/~avattani/papers/cache_stampede.pdf)
 - zero dependencies +
-  [tiny bundle size](https://bundlephobia.com/package/remember-promise@latest) +
-  commonjs, deno and browser support!
+  [tiny bundle size](https://pkg-size.dev/remember-promise) + commonjs, deno and
+  browser support!
 
 ## Installation
 
