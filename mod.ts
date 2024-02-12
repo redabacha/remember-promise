@@ -1,14 +1,18 @@
 // deno-lint-ignore-file no-explicit-any
 
-export type AsyncMapLike<T, U> = {
-  get: (key: T) => U | Promise<U> | undefined;
-  set: (key: T, value: U) => unknown | Promise<unknown>;
-};
+export interface AsyncMapLike<Key, Value> {
+  get: (key: Key) => Value | Promise<Value> | undefined;
+  set: (key: Key, value: Value) => unknown | Promise<unknown>;
+}
 
-export type RememberPromiseOptions<
-  T extends (...args: any[]) => Promise<any> = (...args: any[]) => Promise<any>,
-  U extends Awaited<ReturnType<T>> = Awaited<ReturnType<T>>,
-> = {
+export interface RememberPromiseOptions<
+  PromiseFn extends (...args: any[]) => Promise<any> = (
+    ...args: any[]
+  ) => Promise<any>,
+  PromiseFnReturn extends Awaited<ReturnType<PromiseFn>> = Awaited<
+    ReturnType<PromiseFn>
+  >,
+> {
   /**
    * Configures how long in milliseconds the cached result should be used before needing to be revalidated.
    * Additionally, setting this value to zero or a negative number will disable caching.
@@ -41,7 +45,7 @@ export type RememberPromiseOptions<
   cache?: AsyncMapLike<
     string,
     {
-      result: U;
+      result: PromiseFnReturn;
       lastUpdated: number;
       xfetchDelta: number;
     }
@@ -54,7 +58,7 @@ export type RememberPromiseOptions<
    *
    * @default (...args) => JSON.stringify(args)
    */
-  getCacheKey?: (...args: Parameters<T>) => string | Promise<string>;
+  getCacheKey?: (...args: Parameters<PromiseFn>) => string | Promise<string>;
   /**
    * Use this to catch errors when attempting to update the cache or if `shouldIgnoreResult` throws an error.
    *
@@ -71,8 +75,8 @@ export type RememberPromiseOptions<
    * @default undefined
    */
   shouldIgnoreResult?: (
-    result: U,
-    args: Parameters<T>,
+    result: PromiseFnReturn,
+    args: Parameters<PromiseFn>,
   ) => boolean | Promise<boolean>;
   /**
    * This is the beta value used in [optimal probabilistic cache stampede prevention](https://cseweb.ucsd.edu/~avattani/papers/cache_stampede.pdf)
@@ -84,7 +88,7 @@ export type RememberPromiseOptions<
    * @default 1
    */
   xfetchBeta?: number;
-};
+}
 
 /**
  * Utility to remember promises that were made by a given function.
@@ -92,12 +96,14 @@ export type RememberPromiseOptions<
  * @param promiseFn Promise-returning or async function to remember.
  * @param {RememberPromiseOptions} options Various options to configure the behavior of this utility.
  */
-export const rememberPromise = <
-  T extends (...args: any[]) => Promise<any>,
-  U extends Awaited<ReturnType<T>>,
+export function rememberPromise<
+  PromiseFn extends (...args: any[]) => Promise<any>,
+  PromiseFnReturn extends Awaited<ReturnType<PromiseFn>>,
 >(
-  promiseFn: T,
-  {
+  promiseFn: PromiseFn,
+  options: RememberPromiseOptions<PromiseFn, PromiseFnReturn> = {},
+): (...args: Parameters<PromiseFn>) => Promise<PromiseFnReturn> {
+  const {
     ttl = Infinity,
     allowStale = true,
     cache = new Map(),
@@ -105,9 +111,8 @@ export const rememberPromise = <
     onCacheUpdateError,
     shouldIgnoreResult,
     xfetchBeta = 1,
-  }: RememberPromiseOptions<T, U> = {},
-): (...args: Parameters<T>) => Promise<U> => {
-  const updatePromises = new Map<string, Promise<U>>();
+  } = options;
+  const updatePromises = new Map<string, Promise<PromiseFnReturn>>();
 
   let shouldUpdate: (lastUpdated: number, xfetchDelta: number) => boolean;
   if (!Number.isFinite(ttl)) {
@@ -120,7 +125,7 @@ export const rememberPromise = <
     shouldUpdate = () => true;
   }
 
-  return async (...args: Parameters<T>): Promise<U> => {
+  return async (...args: Parameters<PromiseFn>): Promise<PromiseFnReturn> => {
     const cacheKey = await getCacheKey(...args);
     const cacheValue = await cache.get(cacheKey);
 
@@ -170,4 +175,4 @@ export const rememberPromise = <
 
     return cacheValue.result;
   };
-};
+}
