@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/redabacha/remember-promise/compare/v1.9.0...v1.9.1) (2024-02-16)
+
+
+### Bug Fixes
+
+* update package name in deno.jsonc ([45e419f](https://github.com/redabacha/remember-promise/commit/45e419f31549a332b5779af147479e52e9723c11))
+
 # [1.9.0](https://github.com/redabacha/remember-promise/compare/v1.8.0...v1.9.0) (2024-02-16)
 
 
