@@ -1,7 +1,7 @@
 {
   "lock": false,
   "exclude": ["CHANGELOG.md", "npm"],
-  "name": "@reda/remember_promise",
+  "name": "@reda/remember-promise",
   "version": "1.9.0",
   "exports": "./mod.ts"
 }
