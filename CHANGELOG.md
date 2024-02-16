@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/redabacha/remember-promise/compare/v1.8.0...v1.9.0) (2024-02-16)
+
+
+### Features
+
+* **test:** use jsr imports instead of deno.land ([705bbd9](https://github.com/redabacha/remember-promise/commit/705bbd916fac65e606ee27de62e5ac9cf8edb1a8))
+
 # [1.8.0](https://github.com/redabacha/remember-promise/compare/v1.7.0...v1.8.0) (2024-02-12)
 
 
