@@ -1,20 +1,17 @@
-import {
-  assertEquals,
-  assertIsError,
-} from "https://deno.land/std@0.215.0/assert/mod.ts";
+import { assertEquals, assertIsError } from "jsr:@std/assert@0.216.0";
 import {
   afterEach,
   beforeEach,
   describe,
   it,
-} from "https://deno.land/std@0.215.0/testing/bdd.ts";
+} from "jsr:@std/testing@0.216.0/bdd";
 import {
   assertSpyCalls,
   returnsNext,
   spy,
   stub,
-} from "https://deno.land/std@0.215.0/testing/mock.ts";
-import { FakeTime } from "https://deno.land/std@0.215.0/testing/time.ts";
+} from "jsr:@std/testing@0.216.0/mock";
+import { FakeTime } from "jsr:@std/testing@0.216.0/time";
 import { rememberPromise } from "./mod.ts";
 
 const createMockPromiseFn = () => {
