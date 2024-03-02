@@ -1,10 +1,36 @@
 // deno-lint-ignore-file no-explicit-any
 
+/**
+ * @module
+ *
+ * This is the main module for the {@link rememberPromise} utility.
+ *
+ * Usage:
+ * ```js
+ * import { rememberPromise } from "remember-promise";
+ *
+ * const getRedditFeed = rememberPromise(
+ *   (subreddit) =>
+ *     fetch(`https://www.reddit.com/r/${subreddit}.json`).then((res) =>
+ *       res.json()
+ *     ),
+ *   {
+ *     ttl: 300_000, // 5 minutes before the result must be revalidated again
+ *   },
+ * );
+ *
+ * const firstResult = await getRedditFeed("all");
+ * const secondResult = await getRedditFeed("all"); // this call is cached
+ * ```
+ */
+
+/** The methods needed for a usable cache with the {@link rememberPromise} utility. */
 export interface AsyncMapLike<Key, Value> {
   get: (key: Key) => Value | Promise<Value> | undefined;
   set: (key: Key, value: Value) => unknown | Promise<unknown>;
 }
 
+/** Various options to configure the behavior of the {@link rememberPromise} utility. */
 export interface RememberPromiseOptions<
   PromiseFn extends (...args: any[]) => Promise<any> = (
     ...args: any[]
