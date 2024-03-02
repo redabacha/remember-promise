@@ -1,17 +1,17 @@
-import { assertEquals, assertIsError } from "jsr:@std/assert@0.216.0";
+import { assertEquals, assertIsError } from "jsr:@std/assert@0.218.2";
 import {
   afterEach,
   beforeEach,
   describe,
   it,
-} from "jsr:@std/testing@0.216.0/bdd";
+} from "jsr:@std/testing@0.218.2/bdd";
 import {
   assertSpyCalls,
   returnsNext,
   spy,
   stub,
-} from "jsr:@std/testing@0.216.0/mock";
-import { FakeTime } from "jsr:@std/testing@0.216.0/time";
+} from "jsr:@std/testing@0.218.2/mock";
+import { FakeTime } from "jsr:@std/testing@0.218.2/time";
 import { rememberPromise } from "./mod.ts";
 
 const createMockPromiseFn = () => {
