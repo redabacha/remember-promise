@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/redabacha/remember-promise/compare/v1.9.1...v1.10.0) (2024-03-02)
+
+
+### Features
+
+* add additional documentation ([ddb8797](https://github.com/redabacha/remember-promise/commit/ddb879795d32bde2a1df11dd6b0beb69751cc989))
+
 ## [1.9.1](https://github.com/redabacha/remember-promise/compare/v1.9.0...v1.9.1) (2024-02-16)
 
 
