@@ -1,3 +1,5 @@
+## [1.10.1](https://github.com/redabacha/remember-promise/compare/v1.10.0...v1.10.1) (2024-03-05)
+
 # [1.10.0](https://github.com/redabacha/remember-promise/compare/v1.9.1...v1.10.0) (2024-03-02)
 
 
