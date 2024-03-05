@@ -1,7 +1,9 @@
 # remember-promise
 
-[![bundle size](https://pkg-size.dev/badge/bundle/827)](https://pkg-size.dev/remember-promise)
+[![bundle size](https://pkg-size.dev/badge/bundle/852)](https://pkg-size.dev/remember-promise)
 [![codecov](https://codecov.io/gh/redabacha/remember-promise/graph/badge.svg?token=KMRTWA2DHQ)](https://codecov.io/gh/redabacha/remember-promise)
+[![JSR score](https://jsr.io/badges/@reda/remember-promise/score)](https://jsr.io/@reda/remember-promise/score)
+[![JSR](https://jsr.io/badges/@reda/remember-promise)](https://jsr.io/@reda/remember-promise)
 [![npm](https://shields.io/npm/v/remember-promise)](https://www.npmjs.com/package/remember-promise)
 [![license](https://shields.io/github/license/redabacha/remember-promise)](https://github.com/redabacha/remember-promise/blob/main/LICENSE)
 
@@ -19,22 +21,24 @@ additional built-in features and changes such as:
 
 ## Installation
 
-yarn:
+`remember-promise` is available on both
+[npm](https://www.npmjs.com/package/remember-promise) and
+[JSR](https://jsr.io/@reda/remember-promise).
 
-```
-yarn add remember-promise
+To use from npm, install the
+[`remember-promise`](https://www.npmjs.com/package/remember-promise) package and
+then import into a module:
+
+```js
+import { rememberPromise } from "remember-promise";
 ```
 
-npm:
+To use from JSR, install the
+[`@reda/remember-promise`](https://jsr.io/@reda/remember-promise) package and
+then import into a module:
 
-```
-npm install remember-promise
-```
-
-pnpm:
-
-```
-pnpm install remember-promise
+```js
+import { rememberPromise } from "@reda/remember-promise";
 ```
 
 ## Usage
