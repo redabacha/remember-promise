@@ -21,12 +21,12 @@ additional built-in features and changes such as:
 
 ## Installation
 
-`remember-promise` is available on both
+remember-promise is available on both
 [npm](https://www.npmjs.com/package/remember-promise) and
 [JSR](https://jsr.io/@reda/remember-promise).
 
 To use from npm, install the
-[`remember-promise`](https://www.npmjs.com/package/remember-promise) package and
+[remember-promise](https://www.npmjs.com/package/remember-promise) package and
 then import into a module:
 
 ```js
@@ -34,8 +34,8 @@ import { rememberPromise } from "remember-promise";
 ```
 
 To use from JSR, install the
-[`@reda/remember-promise`](https://jsr.io/@reda/remember-promise) package and
-then import into a module:
+[@reda/remember-promise](https://jsr.io/@reda/remember-promise) package and then
+import into a module:
 
 ```js
 import { rememberPromise } from "@reda/remember-promise";
