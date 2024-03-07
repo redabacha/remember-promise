@@ -79,7 +79,7 @@ export interface RememberPromiseOptions<
   allowStale?: boolean;
   /**
    * This is where cached results will be stored. It can be anything you want such as [lru-cache](https://github.com/isaacs/node-lru-cache)
-   * or a redis backed cache as long as it implements a `get` and `set` method defined in the {@link AsyncMapLike} type.
+   * or a redis backed cache as long as it implements a `get` and `set` method defined in the {@link RememberPromiseCache} type.
    *
    * If you would like to disable caching and only deduplicate identical concurrent calls instead then set this to `false`.
    * When this is set to `false`, the `onCacheUpdateError` and `shouldIgnoreResult` options will be never be used.
