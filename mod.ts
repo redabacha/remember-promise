@@ -107,7 +107,11 @@ export interface RememberPromiseOptions<
    *
    * @default undefined
    */
-  onCacheUpdateError?: (err: unknown) => unknown;
+  onCacheUpdateError?: (
+    err: unknown,
+    result: Result,
+    args: Parameters<PromiseFn>,
+  ) => unknown;
   /**
    * Determines whether the returned result should be added to the cache.
    *
@@ -203,7 +207,7 @@ export function rememberPromise<
               }
             } catch (e) {
               if (onCacheUpdateError) {
-                onCacheUpdateError(e);
+                onCacheUpdateError(e, result, args);
               } else {
                 throw e;
               }

@@ -12,11 +12,11 @@ import {
   stub,
 } from "jsr:@std/testing@0.218.2/mock";
 import { FakeTime } from "jsr:@std/testing@0.218.2/time";
-import { rememberPromise } from "./mod.ts";
+import { rememberPromise, type RememberPromiseOptions } from "./mod.ts";
 
 const createMockPromiseFn = () => {
   let callCount = 1;
-  return spy(() => Promise.resolve(`call-${callCount++}`));
+  return spy((..._args: unknown[]) => Promise.resolve(`call-${callCount++}`));
 };
 
 let time: FakeTime;
@@ -31,6 +31,7 @@ afterEach(() => {
 
 it("should throttle calls to promiseFn", async () => {
   const promiseFn = createMockPromiseFn();
+
   const cachedPromiseFn = rememberPromise(promiseFn);
 
   assertEquals(await Promise.all([cachedPromiseFn(), cachedPromiseFn()]), [
@@ -43,6 +44,7 @@ it("should throttle calls to promiseFn", async () => {
 describe("ttl", () => {
   it("should never call promiseFn again if ttl is not set", async () => {
     const promiseFn = createMockPromiseFn();
+
     const cachedPromiseFn = rememberPromise(promiseFn);
 
     await cachedPromiseFn();
@@ -54,6 +56,7 @@ describe("ttl", () => {
 
   it("should call promiseFn again if ttl is set and expired", async () => {
     const promiseFn = createMockPromiseFn();
+
     const cachedPromiseFn = rememberPromise(promiseFn, { ttl: 30_000 });
 
     await cachedPromiseFn();
@@ -65,6 +68,7 @@ describe("ttl", () => {
 
   it("should not call promiseFn again if ttl is set and not expired", async () => {
     const promiseFn = createMockPromiseFn();
+
     const cachedPromiseFn = rememberPromise(promiseFn, { ttl: 30_000 });
 
     await cachedPromiseFn();
@@ -78,6 +82,7 @@ describe("ttl", () => {
 describe("allowStale", () => {
   it("should return previous cached result while updating cache after ttl expired and allowStale is true", async () => {
     const promiseFn = createMockPromiseFn();
+
     const cachedPromiseFn = rememberPromise(promiseFn, {
       allowStale: true,
       ttl: 30_000,
@@ -92,6 +97,7 @@ describe("allowStale", () => {
 
   it("should not return previous cached result while updating cache after ttl expired and allowStale is false", async () => {
     const promiseFn = createMockPromiseFn();
+
     const cachedPromiseFn = rememberPromise(promiseFn, {
       allowStale: false,
       ttl: 30_000,
@@ -106,9 +112,10 @@ describe("allowStale", () => {
 
 describe("cache", () => {
   it("should not call onCacheUpdateError or shouldIgnoreResult if cache is set to false", async () => {
+    const promiseFn = createMockPromiseFn();
     const onCacheUpdateErrorSpy = spy(() => {});
     const shouldIgnoreResultSpy = spy(() => false);
-    const promiseFn = createMockPromiseFn();
+
     const cachedPromiseFn = rememberPromise(promiseFn, {
       cache: false,
       onCacheUpdateError: onCacheUpdateErrorSpy,
@@ -125,6 +132,7 @@ describe("cache", () => {
 describe("getCacheKey", () => {
   it("should use the same cached result if getCacheKey returns the same key", async () => {
     const promiseFn = createMockPromiseFn();
+
     const cachedPromiseFn = rememberPromise(promiseFn, {
       getCacheKey: () => "",
     });
@@ -136,6 +144,7 @@ describe("getCacheKey", () => {
 
   it("should not use the same cached result if getCacheKey returns a different key", async () => {
     const promiseFn = createMockPromiseFn();
+
     const cachedPromiseFn = rememberPromise(promiseFn, {
       getCacheKey: stub(
         { getCacheKey: () => "default" },
@@ -153,6 +162,7 @@ describe("getCacheKey", () => {
 describe("onCacheUpdateError", () => {
   describe("onCacheUpdateError is undefined", () => {
     it("should throw unhandled rejection if errors occurred while updating cache", async () => {
+      const promiseFn = createMockPromiseFn();
       const cache = new Map();
       const cacheSetStub = stub(cache, "set", () => {
         throw new Error("test");
@@ -165,7 +175,7 @@ describe("onCacheUpdateError", () => {
         };
         globalThis.addEventListener("unhandledrejection", listener);
       });
-      const promiseFn = createMockPromiseFn();
+
       const cachedPromiseFn = rememberPromise(promiseFn, { cache });
 
       assertEquals(await cachedPromiseFn(), "call-1");
@@ -175,6 +185,7 @@ describe("onCacheUpdateError", () => {
     });
 
     it("should throw unhandled rejection if errors occurred while calling shouldIgnoreResult", async () => {
+      const promiseFn = createMockPromiseFn();
       const shouldIgnoreResultSpy = spy(() => {
         throw new Error("test");
       });
@@ -186,7 +197,7 @@ describe("onCacheUpdateError", () => {
         };
         globalThis.addEventListener("unhandledrejection", listener);
       });
-      const promiseFn = createMockPromiseFn();
+
       const cachedPromiseFn = rememberPromise(promiseFn, {
         shouldIgnoreResult: shouldIgnoreResultSpy,
       });
@@ -200,40 +211,52 @@ describe("onCacheUpdateError", () => {
 
   describe("onCacheUpdateError is defined", () => {
     it("should call onCacheUpdateError if errors occurred while updating cache", async () => {
+      const promiseFn = createMockPromiseFn();
       const cache = new Map();
       const cacheSetStub = stub(cache, "set", () => {
         throw new Error("test");
       });
-      const onCacheUpdateErrorSpy = spy((_error: unknown) => {});
-      const promiseFn = createMockPromiseFn();
+      const onCacheUpdateError: RememberPromiseOptions<
+        typeof promiseFn
+      >["onCacheUpdateError"] = () => {};
+      const onCacheUpdateErrorSpy = spy(onCacheUpdateError);
+
       const cachedPromiseFn = rememberPromise(promiseFn, {
         cache,
         onCacheUpdateError: onCacheUpdateErrorSpy,
       });
 
-      assertEquals(await cachedPromiseFn(), "call-1");
+      assertEquals(await cachedPromiseFn("arg-1"), "call-1");
       assertSpyCalls(promiseFn, 1);
       assertSpyCalls(cacheSetStub, 1);
       assertSpyCalls(onCacheUpdateErrorSpy, 1);
       assertIsError(onCacheUpdateErrorSpy.calls[0].args[0], Error, "test");
+      assertEquals(onCacheUpdateErrorSpy.calls[0].args[1], "call-1");
+      assertEquals(onCacheUpdateErrorSpy.calls[0].args[2], ["arg-1"]);
     });
 
     it("should call onCacheUpdateError if errors occurred while calling shouldIgnoreResult", async () => {
+      const promiseFn = createMockPromiseFn();
       const shouldIgnoreResultSpy = spy(() => {
         throw new Error("test");
       });
-      const onCacheUpdateErrorSpy = spy((_error: unknown) => {});
-      const promiseFn = createMockPromiseFn();
+      const onCacheUpdateError: RememberPromiseOptions<
+        typeof promiseFn
+      >["onCacheUpdateError"] = () => {};
+      const onCacheUpdateErrorSpy = spy(onCacheUpdateError);
+
       const cachedPromiseFn = rememberPromise(promiseFn, {
         shouldIgnoreResult: shouldIgnoreResultSpy,
         onCacheUpdateError: onCacheUpdateErrorSpy,
       });
 
-      assertEquals(await cachedPromiseFn(), "call-1");
+      assertEquals(await cachedPromiseFn("arg-1"), "call-1");
       assertSpyCalls(promiseFn, 1);
       assertSpyCalls(shouldIgnoreResultSpy, 1);
       assertSpyCalls(onCacheUpdateErrorSpy, 1);
       assertIsError(onCacheUpdateErrorSpy.calls[0].args[0], Error, "test");
+      assertEquals(onCacheUpdateErrorSpy.calls[0].args[1], "call-1");
+      assertEquals(onCacheUpdateErrorSpy.calls[0].args[2], ["arg-1"]);
     });
   });
 });
@@ -241,6 +264,7 @@ describe("onCacheUpdateError", () => {
 describe("shouldIgnoreResult", () => {
   it("should update cache if shouldIgnoreResult returns false", async () => {
     const promiseFn = createMockPromiseFn();
+
     const cachedPromiseFn = rememberPromise(promiseFn, {
       shouldIgnoreResult: (result) => result !== "call-1",
       ttl: 0,
@@ -253,6 +277,7 @@ describe("shouldIgnoreResult", () => {
 
   it("should not update cache if shouldIgnoreResult returns true", async () => {
     const promiseFn = createMockPromiseFn();
+
     const cachedPromiseFn = rememberPromise(promiseFn, {
       shouldIgnoreResult: (result) => result === "call-1",
       ttl: 0,
