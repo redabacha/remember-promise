@@ -24,10 +24,26 @@
  * ```
  */
 
-/** The methods needed for a usable cache with the {@link rememberPromise} utility. */
-export interface AsyncMapLike<Key, Value> {
-  get: (key: Key) => Value | Promise<Value> | undefined;
-  set: (key: Key, value: Value) => unknown | Promise<unknown>;
+/** Describes the structure of each item in the cache of the {@link rememberPromise} utility. */
+export interface RememberPromiseCacheItem<Result> {
+  /** Stores the time the promise took to return the last updated value. */
+  duration: number;
+  /** Stores the time of when the promise was cached. */
+  lastUpdated: number;
+  /** Stores the return value of the promise. */
+  result: Result;
+}
+
+/** Methods required for a cache to be used with the {@link rememberPromise} utility. */
+export interface RememberPromiseCache<
+  Key,
+  Result,
+  Item = RememberPromiseCacheItem<Result>,
+> {
+  /** Retrieves an item for a given key which can optionally be an asynchronous operation. */
+  get: (key: Key) => Item | Promise<Item> | undefined;
+  /** Stores an item for a given key which can optionally be an asynchronous operation. */
+  set: (key: Key, item: Item) => unknown | Promise<unknown>;
 }
 
 /** Various options to configure the behavior of the {@link rememberPromise} utility. */
@@ -35,9 +51,10 @@ export interface RememberPromiseOptions<
   PromiseFn extends (...args: any[]) => Promise<any> = (
     ...args: any[]
   ) => Promise<any>,
-  PromiseFnReturn extends Awaited<ReturnType<PromiseFn>> = Awaited<
+  Result extends Awaited<ReturnType<PromiseFn>> = Awaited<
     ReturnType<PromiseFn>
   >,
+  CacheKey = string,
 > {
   /**
    * Configures how long in milliseconds the cached result should be used before needing to be revalidated.
@@ -71,16 +88,7 @@ export interface RememberPromiseOptions<
    *
    * @default new Map()
    */
-  cache?:
-    | AsyncMapLike<
-      string,
-      {
-        result: PromiseFnReturn;
-        lastUpdated: number;
-        xfetchDelta: number;
-      }
-    >
-    | false;
+  cache?: RememberPromiseCache<CacheKey, Result> | false;
   /**
    * Identical behavior to the `cacheKey` option in [p-memoize](https://github.com/sindresorhus/p-memoize#cachekey) except that
    * it's allowed to return a promise. It should return what the cache key is based on the parameters of the given function.
@@ -89,7 +97,9 @@ export interface RememberPromiseOptions<
    *
    * @default (...args) => JSON.stringify(args)
    */
-  getCacheKey?: (...args: Parameters<PromiseFn>) => string | Promise<string>;
+  getCacheKey?: (
+    ...args: Parameters<PromiseFn>
+  ) => CacheKey | Promise<CacheKey>;
   /**
    * Use this to catch errors when attempting to update the cache or if `shouldIgnoreResult` throws an error.
    *
@@ -106,7 +116,7 @@ export interface RememberPromiseOptions<
    * @default undefined
    */
   shouldIgnoreResult?: (
-    result: PromiseFnReturn,
+    result: Result,
     args: Parameters<PromiseFn>,
   ) => boolean | Promise<boolean>;
   /**
@@ -129,40 +139,41 @@ export interface RememberPromiseOptions<
  */
 export function rememberPromise<
   PromiseFn extends (...args: any[]) => Promise<any>,
-  PromiseFnReturn extends Awaited<ReturnType<PromiseFn>>,
+  Result extends Awaited<ReturnType<PromiseFn>>,
+  CacheKey = string,
 >(
   promiseFn: PromiseFn,
-  options: RememberPromiseOptions<PromiseFn, PromiseFnReturn> = {},
-): (...args: Parameters<PromiseFn>) => Promise<PromiseFnReturn> {
+  options: RememberPromiseOptions<PromiseFn, Result, CacheKey> = {},
+): (...args: Parameters<PromiseFn>) => Promise<Result> {
   const {
     ttl = Infinity,
     allowStale = true,
-    cache = new Map(),
-    getCacheKey = (...args) => JSON.stringify(args),
+    cache = new Map<CacheKey, RememberPromiseCacheItem<Result>>(),
+    getCacheKey = (...args) => JSON.stringify(args) as CacheKey,
     onCacheUpdateError,
     shouldIgnoreResult,
     xfetchBeta = 1,
   } = options;
-  const updatePromises = new Map<string, Promise<PromiseFnReturn>>();
+  const updatePromises = new Map<CacheKey, Promise<Result>>();
 
-  let shouldUpdate: (lastUpdated: number, xfetchDelta: number) => boolean;
+  let shouldUpdate: (lastUpdated: number, duration: number) => boolean;
   if (!Number.isFinite(ttl)) {
     shouldUpdate = (lastUpdated) => !lastUpdated;
   } else if (ttl > 0) {
-    shouldUpdate = (lastUpdated, xfetchDelta) =>
-      Date.now() - xfetchDelta * xfetchBeta * Math.log(Math.random()) >
+    shouldUpdate = (lastUpdated, duration) =>
+      Date.now() - duration * xfetchBeta * Math.log(Math.random()) >
         lastUpdated + ttl;
   } else {
     shouldUpdate = () => true;
   }
 
-  return async (...args: Parameters<PromiseFn>): Promise<PromiseFnReturn> => {
+  return async (...args: Parameters<PromiseFn>): Promise<Result> => {
     const cacheKey = await getCacheKey(...args);
     const cacheValue = cache && await cache.get(cacheKey);
 
     if (
       !cacheValue ||
-      shouldUpdate(cacheValue.lastUpdated, cacheValue.xfetchDelta)
+      shouldUpdate(cacheValue.lastUpdated, cacheValue.duration)
     ) {
       let updatePromise = updatePromises.get(cacheKey);
 
@@ -185,9 +196,9 @@ export function rememberPromise<
                 const lastUpdated = Date.now();
 
                 await cache.set(cacheKey, {
-                  result,
+                  duration: lastUpdated - startTime,
                   lastUpdated,
-                  xfetchDelta: lastUpdated - startTime,
+                  result,
                 });
               }
             } catch (e) {
