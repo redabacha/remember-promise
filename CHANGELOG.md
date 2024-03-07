@@ -1,3 +1,16 @@
+# [2.0.0](https://github.com/redabacha/remember-promise/compare/v1.10.2...v2.0.0) (2024-03-07)
+
+
+### Features
+
+* add result and args to onCacheUpdateError ([3026a9c](https://github.com/redabacha/remember-promise/commit/3026a9c070891ae5be8de871253e94572d6c87ab))
+* rename types to be more legible ([4e80242](https://github.com/redabacha/remember-promise/commit/4e80242d4a74e45abcda8da11bf43c26d00ffd01))
+
+
+### BREAKING CHANGES
+
+* the AsyncMapLike type has been renamed to RememberPromiseCache
+
 ## [1.10.2](https://github.com/redabacha/remember-promise/compare/v1.10.1...v1.10.2) (2024-03-06)
 
 ## [1.10.1](https://github.com/redabacha/remember-promise/compare/v1.10.0...v1.10.1) (2024-03-05)
