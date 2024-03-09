@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/redabacha/remember-promise/compare/v2.0.1...v2.0.2) (2024-03-09)
+
+
+### Bug Fixes
+
+* **types:** stricten cache item generic type in RememberPromiseCache ([59dd014](https://github.com/redabacha/remember-promise/commit/59dd0149d029e232a42f2613bf186b346056d4b9))
+
 ## [2.0.1](https://github.com/redabacha/remember-promise/compare/v2.0.0...v2.0.1) (2024-03-07)
 
 # [2.0.0](https://github.com/redabacha/remember-promise/compare/v1.10.2...v2.0.0) (2024-03-07)
