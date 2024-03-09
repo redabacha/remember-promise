@@ -38,12 +38,14 @@ export interface RememberPromiseCacheItem<Result> {
 export interface RememberPromiseCache<
   Key,
   Result,
-  Item = RememberPromiseCacheItem<Result>,
+  CacheItem extends RememberPromiseCacheItem<Result> = RememberPromiseCacheItem<
+    Result
+  >,
 > {
   /** Retrieves an item for a given key which can optionally be an asynchronous operation. */
-  get: (key: Key) => Item | Promise<Item> | undefined;
+  get: (key: Key) => CacheItem | Promise<CacheItem> | undefined;
   /** Stores an item for a given key which can optionally be an asynchronous operation. */
-  set: (key: Key, item: Item) => unknown | Promise<unknown>;
+  set: (key: Key, item: CacheItem) => unknown | Promise<unknown>;
 }
 
 /** Various options to configure the behavior of the {@link rememberPromise} utility. */
