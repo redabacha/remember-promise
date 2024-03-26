@@ -1,7 +1,4 @@
-import {
-  build,
-  emptyDir,
-} from "https://raw.githubusercontent.com/denoland/dnt/2d1d120df7f110c510c6d2aa07e9d0886855e182/mod.ts";
+import { build, emptyDir } from "@deno/dnt";
 
 const version = Deno.args[0];
 
