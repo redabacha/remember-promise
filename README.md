@@ -16,14 +16,15 @@ additional built-in features and changes such as:
 - ability to ignore results from being cached
 - [optimal probabilistic cache stampede prevention](https://cseweb.ucsd.edu/~avattani/papers/cache_stampede.pdf)
 - zero dependencies +
-  [tiny bundle size](https://pkg-size.dev/remember-promise) + commonjs, deno and
-  browser support!
+  [tiny bundle size](https://pkg-size.dev/remember-promise) + universal runtime
+  support!
 
 ## Installation
 
 remember-promise is available on both
 [npm](https://www.npmjs.com/package/remember-promise) and
-[JSR](https://jsr.io/@reda/remember-promise).
+[JSR](https://jsr.io/@reda/remember-promise). The npm package is published as
+CommonJS for maximum compatibility.
 
 To use from npm, install the
 [remember-promise](https://www.npmjs.com/package/remember-promise) package and
@@ -59,6 +60,12 @@ const getRedditFeed = rememberPromise(
 
 const firstResult = await getRedditFeed("all");
 const secondResult = await getRedditFeed("all"); // this call is cached
+
+// only one http request is made
+const [thirdResult, fourthResult] = await Promise.all([
+  getRedditFeed("javascript"),
+  getRedditFeed("javascript"),
+]);
 ```
 
 ## Options

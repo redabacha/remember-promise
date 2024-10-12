@@ -19,7 +19,7 @@ afterEach(() => {
   time.restore();
 });
 
-it("should throttle calls to promiseFn", async () => {
+it("should dedupe calls to promiseFn", async () => {
   const promiseFn = createMockPromiseFn();
 
   const cachedPromiseFn = rememberPromise(promiseFn);

@@ -21,6 +21,12 @@
  *
  * const firstResult = await getRedditFeed("all");
  * const secondResult = await getRedditFeed("all"); // this call is cached
+ *
+ * // only one http request is made
+ * const [thirdResult, fourthResult] = await Promise.all([
+ *   getRedditFeed("javascript"),
+ *   getRedditFeed("javascript"),
+ * ]);
  * ```
  */
 
