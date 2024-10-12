@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v1
+      - uses: denoland/setup-deno@v2
         with:
-            deno-version: v1.x
+            deno-version: v2.x
       - run: deno fmt --check
       - run: deno lint
       - run: deno doc --lint ./mod.ts
@@ -28,9 +28,9 @@ jobs:
     if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v1
+      - uses: denoland/setup-deno@v2
         with:
-            deno-version: v1.x
+            deno-version: v2.x
       - run: deno run -A ./scripts/prepare_release.ts
   release:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -41,9 +41,9 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v1
+      - uses: denoland/setup-deno@v2
         with:
-          deno-version: v1.x
+          deno-version: v2.x
       - uses: actions/setup-node@v4
         with:
           node-version: 20

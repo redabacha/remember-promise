@@ -19,7 +19,7 @@
       }
     ],
     ["@semantic-release/npm", { "pkgRoot": "npm" }],
-    ["@semantic-release/git", { "assets": ["CHANGELOG.md", "deno.jsonc"] }],
+    ["@semantic-release/git", { "assets": ["CHANGELOG.md", "deno.json"] }],
     "@semantic-release/github"
   ]
 }

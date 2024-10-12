@@ -4,9 +4,9 @@ const version = Deno.args[0];
 
 if (version) {
   await Deno.writeTextFile(
-    "deno.jsonc",
+    "deno.json",
     (
-      await Deno.readTextFile("deno.jsonc")
+      await Deno.readTextFile("deno.json")
     ).replace(/"version": ".*"/, `"version": "${version}"`),
   );
 }
